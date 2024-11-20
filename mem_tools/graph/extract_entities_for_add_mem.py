@@ -4,11 +4,26 @@ import os
 from infra.llms.consts import *
 from infra.llms.base import LLMBase
 from infra.llms.factory import LlmFactory
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
-def extract_entities_for_add_mem(user_id: str, llm: LLMBase, data: str):
-    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(user_id=user_id)
+
+class GraphEntitiy(BaseModel):
+    destination_node: str = Field(
+    )
+    destination_type: str = Field(
+    )
+    relation: str = Field(
+    )
+    source_node: str = Field(
+    )
+    source_type: str = Field(
+    )
+
+
+def extract_entities_for_add_mem(user_name: str, llm: LLMBase, data: str) -> GraphEntitiy:
+    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(user_name=user_name)
     tools = [_tool_description.get(llm.config.model, _DEFAULT_TOOL_DESC)]
     extracted_entities = llm.generate_response(
         messages=[
@@ -44,7 +59,7 @@ You are an advanced algorithm designed to extract structured information from te
 
 1. Extract only explicitly stated information from the text.
 2. Identify nodes (entities/concepts), their types, and relationships.
-3. Use {user_id} as the source node for any self-references (I, me, my, etc.) in user messages.
+3. Use {user_name} as the source node for any self-references (I, me, my, etc.) in user messages.
 CUSTOM_PROMPT
 
 Nodes and Types:
@@ -100,17 +115,15 @@ _DEFAULT_TOOL_DESC = {
     },
 }
 
-
 if __name__ == "__main__":
     config = {
-        "api_key": os.environ.get("OPENAI_API_KEY"),
-        "openai_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": os.environ.get("DASHSCOPE_API_KEY"),
         "model": "qwen-max",
         "temperature": 0.001,
         "top_p": 0.001,
         "max_tokens": 1500,
     }
-    llm = LlmFactory.create("openai", config)
+    llm = LlmFactory.create("aliyun", config)
 
     # 0 = {dict: 5} {'destination_node': 'Hancy', 'destination_type': 'person', 'relation': 'HAS_CHILD', 'source_node': 'XiangWang', 'source_type': 'person'}
     # 1 = {dict: 5} {'destination_node': 'playing football', 'destination_type': 'activity', 'relation': 'LIKES', 'source_node': 'Hancy', 'source_type': 'person'}

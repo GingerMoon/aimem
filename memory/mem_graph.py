@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 
@@ -16,14 +17,15 @@ except ImportError:
 from infra.llms.factory import LlmFactory
 from infra.embeddings.factory import EmbedderFactory
 from mem_tools.graph.extract_entities_for_add_mem import extract_entities_for_add_mem
-from mem_tools.graph.extract_entities_for_search import extract_entities_for_search
+from mem_tools.graph.extract_nodes_for_search import extract_nodes_for_search
 from mem_tools.graph.update_mem import update_mem
+from consts import *
 
 logger = logging.getLogger(__name__)
 
 
 class MemoryGraph:
-    def __init__(self, config):
+    def __init__(self, config: MemoryConfig = MemoryConfig()):
         self.config = config
         self.graph = Neo4jGraph(
             self.config.graph_store.config.url,
@@ -41,21 +43,24 @@ class MemoryGraph:
         self.llm = LlmFactory.create(self.llm_provider, self.config.llm.config)
         self.threshold = 0.7
 
-    def add(self, data, filters):
+    # TODO store metadata in nodes/relations
+    def add(self, messages, metadata, filters):
         """
         Adds data to the graph.
 
         Args:
-            data (str): The data to add to the graph.
-            filters (dict): A dictionary containing filters to be applied during the addition.
+            messages (array): The classic openai API chat completion messages.
+            metadata (dict): A dictionary containing metadata, such as user_name=xiang.
+            filters (dict): A dictionary containing filters such as namespace=n1.
         """
 
-        # retrieve the search results
-        search_output = []
-        search_output = self._search(data, filters)
+        data = "\n".join([msg["content"] for msg in messages if "content" in msg and msg["role"] != "system"])
 
-        extracted_entities = extract_entities_for_add_mem(filters["user_id"], self.llm, data)
-        logger.debug(f"Extracted entities: {extracted_entities}")
+        # retrieve the search results
+        search_output = self._search(data, metadata, filters)
+
+        extracted_entities = extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data)
+        logger.info(f"Extracted entities: {extracted_entities}")
 
         to_be_added = []
         to_be_updated = []
@@ -89,10 +94,10 @@ class MemoryGraph:
 
             # Updated Cypher query to include node types and embeddings
             cypher = f"""
-            MERGE (n:{source_type} {{name: $source_name, user_id: $user_id}})
+            MERGE (n:{source_type} {{name: $source_name, {NAMESPACE}: ${NAMESPACE}}})
             ON CREATE SET n.created = timestamp(), n.embedding = $source_embedding
             ON MATCH SET n.embedding = $source_embedding
-            MERGE (m:{destination_type} {{name: $dest_name, user_id: $user_id}})
+            MERGE (m:{destination_type} {{name: $dest_name, {NAMESPACE}: ${NAMESPACE}}})
             ON CREATE SET m.created = timestamp(), m.embedding = $dest_embedding
             ON MATCH SET m.embedding = $dest_embedding
             MERGE (n)-[rel:{relation}]->(m)
@@ -105,7 +110,7 @@ class MemoryGraph:
                 "dest_name": destination,
                 "source_embedding": source_embedding,
                 "dest_embedding": dest_embedding,
-                "user_id": filters["user_id"],
+                f"{NAMESPACE}": filters[f"{NAMESPACE}"],
             }
 
             _ = self.graph.query(cypher, params=params)
@@ -114,18 +119,16 @@ class MemoryGraph:
 
         return returned_entities
 
-    def _search(self, query, filters, limit=100):
-        node_list = extract_entities_for_search(filters["user_id"], self.llm, query)
-        logger.debug(f"Node list for search query : {node_list}")
+    def _search(self, query, metadata, filters, limit=100):
+        node_list = extract_nodes_for_search(metadata[f"{USER_NAME}"], self.llm, query)
+        logger.info(f"Node list for search query : {node_list}")
 
         result_relations = []
+        node_list_hop2 = set()
 
-        for node in node_list:
-            n_embedding = self.embedding_model.embed(node)
-
-            cypher_query = """
+        cypher_query = f"""
             MATCH (n)
-            WHERE n.embedding IS NOT NULL AND n.user_id = $user_id
+            WHERE n.embedding IS NOT NULL AND n.{NAMESPACE} = ${NAMESPACE}
             WITH n,
                 round(reduce(dot = 0.0, i IN range(0, size(n.embedding)-1) | dot + n.embedding[i] * $n_embedding[i]) /
                 (sqrt(reduce(l2 = 0.0, i IN range(0, size(n.embedding)-1) | l2 + n.embedding[i] * n.embedding[i])) *
@@ -135,7 +138,7 @@ class MemoryGraph:
             RETURN n.name AS source, elementId(n) AS source_id, type(r) AS relation, elementId(r) AS relation_id, m.name AS destination, elementId(m) AS destination_id, similarity
             UNION
             MATCH (n)
-            WHERE n.embedding IS NOT NULL AND n.user_id = $user_id
+            WHERE n.embedding IS NOT NULL AND n.{NAMESPACE} = ${NAMESPACE}
             WITH n,
                 round(reduce(dot = 0.0, i IN range(0, size(n.embedding)-1) | dot + n.embedding[i] * $n_embedding[i]) /
                 (sqrt(reduce(l2 = 0.0, i IN range(0, size(n.embedding)-1) | l2 + n.embedding[i] * n.embedding[i])) *
@@ -146,23 +149,42 @@ class MemoryGraph:
             ORDER BY similarity DESC
             LIMIT $limit
             """
+
+        for node in node_list:
+            n_embedding = self.embedding_model.embed(node)
             params = {
                 "n_embedding": n_embedding,
                 "threshold": self.threshold,
-                "user_id": filters["user_id"],
+                f"{NAMESPACE}": filters[f"{NAMESPACE}"],
                 "limit": limit,
             }
-            ans = self.graph.query(cypher_query, params=params)
-            result_relations.extend(ans)
+            # srd : source_relation_destination
+            srds = self.graph.query(cypher_query, params=params)
+            result_relations.extend(srds)
+            for srd in srds:
+                node_list_hop2.add(srd["destination"])
+
+        logger.info(f"{node_list_hop2=}")
+        for node in node_list_hop2:
+            n_embedding = self.embedding_model.embed(node)
+            params = {
+                "n_embedding": n_embedding,
+                "threshold": self.threshold,
+                f"{NAMESPACE}": filters[f"{NAMESPACE}"],
+                "limit": limit,
+            }
+            srds = self.graph.query(cypher_query, params=params)
+            result_relations.extend(srds)
 
         return result_relations
 
-    def search(self, query, filters, limit=100):
+    def search(self, query, metadata, filters, limit=100):
         """
         Search for memories and related graph data.
 
         Args:
             query (str): Query to search for.
+            metadata (dict): A dictionary containing metadata, such as user_name=xiang.
             filters (dict): A dictionary containing filters to be applied during the search.
             limit (int): The maximum number of nodes and relationships to retrieve. Defaults to 100.
 
@@ -172,12 +194,22 @@ class MemoryGraph:
                 - "entities": List of related graph data based on the query.
         """
 
-        search_output = self._search(query, filters, limit)
+        search_output = self._search(query, metadata, filters, limit)
 
         if not search_output:
             return []
 
         search_outputs_sequence = [[item["source"], item["relation"], item["destination"]] for item in search_output]
+        # search_outputs_sequence deduplication
+        srd_json_str_set = set()
+        srds = []
+        for srd in search_outputs_sequence:
+            json_string = json.dumps(srd)
+            if json_string not in srd_json_str_set:
+                srd_json_str_set.add(json_string)
+                srds.append(srd)
+        search_outputs_sequence = srds
+
         bm25 = BM25Okapi(search_outputs_sequence)
 
         tokenized_query = query.split(" ")
@@ -187,16 +219,16 @@ class MemoryGraph:
         for item in reranked_results:
             search_results.append({"source": item[0], "relationship": item[1], "target": item[2]})
 
-        logger.info(f"Returned {len(search_results)} search results")
+        logger.info(f"{search_results=}")
 
         return search_results
 
     def delete_all(self, filters):
-        cypher = """
-        MATCH (n {user_id: $user_id})
+        cypher = f"""
+        MATCH (n {{{NAMESPACE}: ${NAMESPACE}}})
         DETACH DELETE n
         """
-        params = {"user_id": filters["user_id"]}
+        params = {f"{NAMESPACE}": filters[f"{NAMESPACE}"]}
         self.graph.query(cypher, params=params)
 
     def get_all(self, filters, limit=100):
@@ -213,12 +245,12 @@ class MemoryGraph:
         """
 
         # return all nodes and relationships
-        query = """
-        MATCH (n {user_id: $user_id})-[r]->(m {user_id: $user_id})
+        query = f"""
+        MATCH (n {{{NAMESPACE}: ${NAMESPACE}}})-[r]->(m {{{NAMESPACE}: ${NAMESPACE}}})
         RETURN n.name AS source, type(r) AS relationship, m.name AS target
         LIMIT $limit
         """
-        results = self.graph.query(query, params={"user_id": filters["user_id"], "limit": limit})
+        results = self.graph.query(query, params={f"{NAMESPACE}": filters[f"{NAMESPACE}"], "limit": limit})
 
         final_results = []
         for result in results:
@@ -242,7 +274,7 @@ class MemoryGraph:
             source (str): The name of the source node.
             target (str): The name of the target node.
             relationship (str): The type of the relationship.
-            filters (dict): A dictionary containing filters to be applied during the update.
+            filters (dict): A dictionary containing filter such as namespace=n1
 
         Raises:
             Exception: If the operation fails.
@@ -252,34 +284,34 @@ class MemoryGraph:
         relationship = relationship.lower().replace(" ", "_")
 
         # Check if nodes exist and create them if they don't
-        check_and_create_query = """
-        MERGE (n1 {name: $source, user_id: $user_id})
-        MERGE (n2 {name: $target, user_id: $user_id})
+        check_and_create_query = f"""
+        MERGE (n1 {{name: $source, {NAMESPACE}: ${NAMESPACE}}})
+        MERGE (n2 {{name: $target, {NAMESPACE}: ${NAMESPACE}}})
         """
         self.graph.query(
             check_and_create_query,
-            params={"source": source, "target": target, "user_id": filters["user_id"]},
+            params={"source": source, "target": target, f"{NAMESPACE}": filters[f"{NAMESPACE}"]},
         )
 
         # Delete any existing relationship between the nodes
-        delete_query = """
-        MATCH (n1 {name: $source, user_id: $user_id})-[r]->(n2 {name: $target, user_id: $user_id})
+        delete_query = f"""
+        MATCH (n1 {{name: $source, {NAMESPACE}: ${NAMESPACE}}})-[r]->(n2 {{name: $target, {NAMESPACE}: ${NAMESPACE}}})
         DELETE r
         """
         self.graph.query(
             delete_query,
-            params={"source": source, "target": target, "user_id": filters["user_id"]},
+            params={"source": source, "target": target, f"{NAMESPACE}": filters[f"{NAMESPACE}"]},
         )
 
         # Create the new relationship
         create_query = f"""
-        MATCH (n1 {{name: $source, user_id: $user_id}}), (n2 {{name: $target, user_id: $user_id}})
+        MATCH (n1 {{name: $source, {NAMESPACE}: ${NAMESPACE}}}), (n2 {{name: $target, {NAMESPACE}: ${NAMESPACE}}})
         CREATE (n1)-[r:{relationship}]->(n2)
         RETURN n1, r, n2
         """
         result = self.graph.query(
             create_query,
-            params={"source": source, "target": target, "user_id": filters["user_id"]},
+            params={"source": source, "target": target, f"{NAMESPACE}": filters[f"{NAMESPACE}"]},
         )
 
         if not result:
@@ -306,13 +338,12 @@ if __name__ == "__main__":
             },
         },
         "llm": {
-            "provider": "openai",
+            "provider": "aliyun",
             "config": {
-                "api_key": os.environ.get("OPENAI_API_KEY"),
-                "openai_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                "api_key": os.environ.get("DASHSCOPE_API_KEY"),
                 "model": "qwen-max",
-                "temperature": 0.001,
-                "top_p": 0.001,
+                "temperature": 0.00001,
+                "top_p": 0.00001,
                 "max_tokens": 1500,
             }
         },
@@ -327,19 +358,21 @@ if __name__ == "__main__":
     }
     config = MemoryConfig(**config_dict)
 
-    graph_mem = MemoryGraph(config)
+    metadata = {f"{USER_NAME}": "wx"}
+    filters = {f"{NAMESPACE}": "n1"}
 
-    graph_mem.delete_all({"user_id": "wx"})
+    mem = MemoryGraph(config)
 
-    data = """
-    The name of Hancy's only cat is Kitty.
-    The name of Hancy's only dog is Dylan.
-    wx works for Giant Network Inc..
-    """
+    filters = {f"{NAMESPACE}": "n1"}
+    mem.delete_all(filters)
 
-    filter = {
-        "user_id": "wx"
-    }
-    new_mem = graph_mem.add(data, filter)
-    print(new_mem)
+    content = "My only daughter's name is Hancy. Hancy likes playing football. I work for Giant Network Inc.."
+    messages = [{"role": "user", "content": content}]
+    memories = mem.add(messages, metadata, filters)
+
+    content = "Hancy doesn't likes playing football. Giant Network Inc. is located in SongJiang District Shanghai China."
+    messages = [{"role": "user", "content": content}]
+    memories = mem.add(messages, metadata, filters)
+    logger.info(f"{memories=}")
+
 

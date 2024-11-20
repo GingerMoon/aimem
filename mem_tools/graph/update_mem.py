@@ -7,8 +7,8 @@ from infra.llms.factory import LlmFactory
 
 logger = logging.getLogger(__name__)
 
-def update_mem(llm: LLMBase, existing_memories, new_memory):
-    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(existing_memories=existing_memories, memory=new_memory)
+def update_mem(llm: LLMBase, existing_memories, new_memories):
+    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(existing_memories=existing_memories, memory=new_memories)
     tools = [_tool_description_update.get(llm.config.model, _DEFAULT_TOOL_DESC_UPDATE),
              _tool_description_add.get(llm.config.model, _DEFAULT_TOOL_DESC_ADD),
              _tool_description_noop.get(llm.config.model, _DEFAULT_TOOL_DESC_NOOP)]
@@ -164,14 +164,13 @@ _DEFAULT_TOOL_DESC_NOOP = {
 # "The given text does not provide any information about Cattie's owner or their age. Could you please provide more details or context?"
 if __name__ == "__main__":
     config = {
-        "api_key": os.environ.get("OPENAI_API_KEY"),
-        "openai_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": os.environ.get("DASHSCOPE_API_KEY"),
         "model": "qwen-max",
         "temperature": 0.001,
         "top_p": 0.001,
         "max_tokens": 1500,
     }
-    llm = LlmFactory.create("openai", config)
+    llm = LlmFactory.create("aliyun", config)
     existing_memories = [
         {
             "destination_node": "Hancy",
@@ -188,7 +187,7 @@ if __name__ == "__main__":
             "source_type": "person",
         }
     ]
-    new_memory = [
+    new_memories = [
         {
             "destination_node": "Hancy",
             "destination_type": "person",
@@ -204,11 +203,11 @@ if __name__ == "__main__":
             "source_type": "person",
         },
     ]
-    to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memory)
-    print(to_be_added)
-    print(to_be_updated)
+    to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memories)
+    logger.info(f"{to_be_added=}")
+    logger.info(f"{to_be_updated=}")
 
-    new_memory = [
+    new_memories = [
         {
             "destination_node": "Hancy",
             "destination_type": "person",
@@ -224,6 +223,6 @@ if __name__ == "__main__":
             "source_type": "person",
         }
     ]
-    to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memory)
-    print(to_be_added)
-    print(to_be_updated)
+    to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memories)
+    logger.info(f"{to_be_added=}")
+    logger.info(f"{to_be_updated=}")

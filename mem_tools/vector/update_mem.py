@@ -5,12 +5,16 @@ import os
 from infra.llms.consts import *
 from infra.llms.base import LLMBase
 from infra.llms.factory import LlmFactory
+from infra.utils.format import strip_markdown_json_flag
 
 logger = logging.getLogger(__name__)
 
-# !!! if new_memory is an array, qwen model cannot infer correctly.
-def update_mem(llm: LLMBase, existing_memories, new_memories):
-    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(existing_memories=existing_memories, new_memories=new_memories)
+def llm_plan_update_mem(llm: LLMBase, existing_memories, new_memories):
+
+    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(
+        OPERATION_TYPE=OPERATION_TYPE, OPERATION_PRE_VALUE = OPERATION_PRE_VALUE,
+        existing_memories=existing_memories, new_memories=new_memories)
+
     messages = [
         {
             ROLE: USER,
@@ -25,10 +29,14 @@ def update_mem(llm: LLMBase, existing_memories, new_memories):
     )
     logger.info(f"new_memories_with_actions:\n{resp}")
 
+    resp = strip_markdown_json_flag(resp)
     new_memories_with_actions = json.loads(resp)
 
     return new_memories_with_actions
 
+
+OPERATION_TYPE = "type"
+OPERATION_PRE_VALUE = "value_pre"
 
 _prompt_dict = dict()
 
@@ -61,12 +69,12 @@ _DEFAULT_PROMPT = """You are a smart memory manager which controls the memory of
                         {{
                             "id" : "0",
                             "text" : "User is a software engineer",
-                            "type" : "NONE"
+                            {OPERATION_TYPE} : "NONE"
                         }},
                         {{
                             "id" : "1",
                             "text" : "Name is John",
-                            "type" : "ADD"
+                            {OPERATION_TYPE} : "ADD"
                         }}
                     ]
 
@@ -102,19 +110,19 @@ _DEFAULT_PROMPT = """You are a smart memory manager which controls the memory of
                         {{
                             "id" : "0",
                             "text" : "Loves cheese and chicken pizza",
-                            "type" : "UPDATE",
-                            "value_pre" : "I really like cheese pizza"
+                            {OPERATION_TYPE} : "UPDATE",
+                            {OPERATION_PRE_VALUE} : : "I really like cheese pizza"
                         }},
                         {{
                             "id" : "1",
                             "text" : "User is a software engineer",
-                            "type" : "NONE"
+                            {OPERATION_TYPE} : "NONE"
                         }},
                         {{
                             "id" : "2",
                             "text" : "Loves to play cricket with friends",
-                            "type" : "UPDATE",
-                            "value_pre" : "User likes to play cricket"
+                            {OPERATION_TYPE} : "UPDATE",
+                            {OPERATION_PRE_VALUE} : : "User likes to play cricket"
                         }}
                     ]
                 }}
@@ -141,12 +149,12 @@ _DEFAULT_PROMPT = """You are a smart memory manager which controls the memory of
                         {{
                             "id" : "0",
                             "text" : "Name is John",
-                            "type" : "NONE"
+                            {OPERATION_TYPE} : "NONE"
                         }},
                         {{
                             "id" : "1",
                             "text" : "Loves cheese pizza",
-                            "type" : "DELETE"
+                            {OPERATION_TYPE} : "DELETE"
                         }}
                 ]
                 }}
@@ -171,12 +179,12 @@ _DEFAULT_PROMPT = """You are a smart memory manager which controls the memory of
                         {{
                             "id" : "0",
                             "text" : "Name is John",
-                            "type" : "NONE"
+                            {OPERATION_TYPE} : "NONE"
                         }},
                         {{
                             "id" : "1",
                             "text" : "Loves cheese pizza",
-                            "type" : "NONE"
+                            {OPERATION_TYPE} : "NONE"
                         }}
                     ]
                 }}
@@ -201,7 +209,7 @@ _DEFAULT_PROMPT = """You are a smart memory manager which controls the memory of
     - If there is a deletion, the memory key-value pair should be removed from the memory.
     - If there is an update, the ID key should remain the same and only the value needs to be updated. The previous value should be returned as value_pre.
 
-    Do not return anything except the JSON format. Please strip off the markdown flag ```json```.
+    Do not return anything except the JSON format.
     """
 
 if __name__ == "__main__":
@@ -213,22 +221,26 @@ if __name__ == "__main__":
         "max_tokens": 1500,
     }
     llm = LlmFactory.create("aliyun", config)
+
+    existing_memories = []
+    new_memories = ["Daughter's name is Hancy"]
+    new_memories_with_actions = llm_plan_update_mem(llm, existing_memories, new_memories)
+    logger.info(f"{new_memories_with_actions=}")
+
     existing_memories = [
         {
             "id": "100",
-            "text": "Hancy has only one cat named Kitty.",
+            "text": "Have only one cat named Kitty.",
         },
         {
             "id": "2",
-            "text": "Hancy loves playing football.",
+            "text": "Love playing football.",
         },
     ]
     new_memories = [
-        {"facts" : ["Hancy has only one cat named Mimi."]},
-        {"facts" : ["Hancy has only one dog named WangCai."]},
-        {"facts" : ["Hancy doesn't like playing football."]},
+        {"facts": ["Have only one cat named Mimi."]},
+        {"facts": ["Have only one dog named WangCai."]},
+        {"facts": ["Don't like playing football."]},
     ]
-    existing_memories = []
-    new_memories = ["Daughter's name is Hancy"]
-    new_memories_with_actions = update_mem(llm, existing_memories, new_memories)
-    print(new_memories_with_actions)
+    new_memories_with_actions = llm_plan_update_mem(llm, existing_memories, new_memories)
+    logger.info(f"{new_memories_with_actions=}")

@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dea9414a-9f59-4741-b609-45576be5059b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/aimem.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infra/llms/aliyun.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/llms/aliyun.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory/mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +25,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;GingerMoon&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:GingerMoon/aimem.git&quot;,
+    &quot;accountId&quot;: &quot;713bec60-129d-4d8d-89a0-12ae22375ef8&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 2
@@ -43,30 +51,44 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Python.abstract_out_mem.executor": "Debug",
+    "Python.abstract_out_mem.executor": "Run",
     "Python.aliyun.executor": "Run",
     "Python.dashscope (1).executor": "Run",
     "Python.dashscope.executor": "Debug",
     "Python.dashscope1.executor": "Debug",
-    "Python.extract_entities_for_search.executor": "Debug",
-    "Python.graph_memory.executor": "Debug",
-    "Python.memory.executor": "Debug",
-    "Python.update_mem.executor": "Debug",
+    "Python.extract_entities_for_add_mem.executor": "Run",
+    "Python.extract_entities_for_search.executor": "Run",
+    "Python.extract_nodes_for_search (1).executor": "Run",
+    "Python.extract_nodes_for_search.executor": "Debug",
+    "Python.graph_memory.executor": "Run",
+    "Python.mem.executor": "Debug",
+    "Python.mem_graph.executor": "Run",
+    "Python.mem_vec.executor": "Run",
+    "Python.memory.executor": "Run",
+    "Python.update_mem (1).executor": "Run",
+    "Python.update_mem.executor": "Run",
+    "Python.update_mem_vec.executor": "Run",
+    "Python.vector_memory.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/wangxiang1/workspace/aimem/infra/llms"
+    "last_opened_file_path": "C:/Users/wangxiang1/workspace/research/aimem/memory",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\wangxiang1\workspace\research\aimem\memory" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\infra\llms" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\mem_tools\vector" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\infra\utils" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\memory" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\wangxiang1\workspace\aimem\mem_tools\vector" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.memory">
-    <configuration name="abstract_out_mem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.extract_nodes_for_search">
+    <configuration name="extract_nodes_for_search" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aimem" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -74,37 +96,14 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mem_tools" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mem_tools/abstract_out_mem.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="aliyun" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="aimem" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
-        <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/infra/llms" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mem_tools/graph" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\wangxiang1\workspace\aimem\infra\llms\aliyun.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -113,45 +112,22 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="aliyun" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="mem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aimem" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
-        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
         <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
         <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/infra/llms" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/infra/llms/aliyun.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="memory" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="aimem" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/memory" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/memory/memory.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/memory/mem.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -160,14 +136,62 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="update_mem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="mem_graph" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aimem" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
-        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
         <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+        <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/memory" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/memory/mem_graph.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mem_vec" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="aimem" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+        <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/memory" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/memory/mem_vec.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="update_mem_vec" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="aimem" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
         <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
       </envs>
       <option name="SDK_HOME" value="" />
@@ -185,25 +209,26 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.aliyun" />
-      <item itemvalue="Python.memory" />
-      <item itemvalue="Python.update_mem" />
-      <item itemvalue="Python.abstract_out_mem" />
+      <item itemvalue="Python.extract_nodes_for_search" />
+      <item itemvalue="Python.mem" />
+      <item itemvalue="Python.mem_vec" />
+      <item itemvalue="Python.update_mem_vec" />
+      <item itemvalue="Python.mem_graph" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.memory" />
-        <item itemvalue="Python.update_mem" />
-        <item itemvalue="Python.aliyun" />
-        <item itemvalue="Python.aliyun" />
-        <item itemvalue="Python.abstract_out_mem" />
+        <item itemvalue="Python.extract_nodes_for_search" />
+        <item itemvalue="Python.mem" />
+        <item itemvalue="Python.mem_vec" />
+        <item itemvalue="Python.mem_graph" />
+        <item itemvalue="Python.update_mem_vec" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-975db3bf15a3-31b6be0877a2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.18034.82" />
+        <option value="bundled-python-sdk-d7ad00fb9fc3-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23726.102" />
       </set>
     </attachedChunks>
   </component>
@@ -222,64 +247,39 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mem_tools/graph/extract_entities_for_search.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="12" />
+          <url>file://$PROJECT_DIR$/memory/mem_vec.py</url>
+          <line>259</line>
+          <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/graph_memory.py</url>
-          <line>67</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/graph_memory.py</url>
-          <line>331</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/memory.py</url>
-          <line>178</line>
-          <option name="timeStamp" value="54" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/memory.py</url>
-          <line>161</line>
-          <option name="timeStamp" value="58" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/memory.py</url>
-          <line>167</line>
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/memory.py</url>
-          <line>146</line>
-          <option name="timeStamp" value="62" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/memory.py</url>
-          <line>141</line>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/memory.py</url>
-          <line>643</line>
-          <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/infra/llms/openai.py</url>
-          <line>109</line>
-          <option name="timeStamp" value="74" />
+          <url>file://$PROJECT_DIR$/memory/mem_graph.py</url>
+          <line>179</line>
+          <option name="timeStamp" value="132" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/infra/llms/aliyun.py</url>
-          <line>40</line>
-          <option name="timeStamp" value="87" />
+          <line>45</line>
+          <option name="timeStamp" value="133" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/infra/llms/aliyun.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="88" />
+          <line>39</line>
+          <option name="timeStamp" value="134" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mem_tools/graph/extract_entities_for_add_mem.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="135" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/infra/llms/aliyun.py</url>
+          <line>96</line>
+          <option name="timeStamp" value="136" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/memory/mem_graph.py</url>
+          <line>121</line>
+          <option name="timeStamp" value="138" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

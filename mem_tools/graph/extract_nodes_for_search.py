@@ -12,8 +12,8 @@ from mem_tools.graph.extract_entities_for_add_mem import (
 
 logger = logging.getLogger(__name__)
 
-def extract_entities_for_search(user_id: str, llm: LLMBase, query: str):
-    extracted_entities = extract_entities_for_add_mem(user_id, llm, query)
+def extract_nodes_for_search_2(user_name: str, llm: LLMBase, query: str):
+    extracted_entities = extract_entities_for_add_mem(user_name, llm, query)
     logger.info(extracted_entities)
 
     node_list = []
@@ -25,8 +25,8 @@ def extract_entities_for_search(user_id: str, llm: LLMBase, query: str):
     node_list = [node.lower().replace(" ", "_") for node in node_list]
     return node_list
 
-def extract_entities_for_search_2(user_id: str, llm: LLMBase, query: str):
-    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(user_id=user_id)
+def extract_nodes_for_search(user_name: str, llm: LLMBase, query: str):
+    prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(user_name=user_name)
     tools = [_tool_description.get(llm.config.model, _DEFAULT_TOOL_DESC)]
     extracted_entities = llm.generate_response(
         messages=[
@@ -38,8 +38,9 @@ def extract_entities_for_search_2(user_id: str, llm: LLMBase, query: str):
         ],
         tools=tools,
     )
-    logger.info(extracted_entities)
+    logger.info(f"{extracted_entities=}")
 
+    # TODO also take relation into account
     node_list = []
     for item in extracted_entities[TOOL_CALLS]:
         if item[NAME] == SEARCH_FUNCTION:
@@ -59,7 +60,7 @@ _prompt_dict = dict()
 _tool_description = dict()
 
 _DEFAULT_PROMPT = """
-You are a smart assistant who understands the entities, their types, and relations in a given text. If user message contains self reference such as 'I', 'me', 'my' etc. then use {user_id} as the source node. Extract the entities. ***DO NOT*** answer the question itself if the given text is a question.
+You are a smart assistant who understands the entities, their types, and relations in a given text. If user message contains self reference such as 'I', 'me', 'my' etc. then use {user_name} as the source node. Search for nodes and relations in the graph. ***DO NOT*** answer the question itself if the given text is a question.
 """
 
 SEARCH_FUNCTION = "search_"
@@ -102,18 +103,18 @@ _DEFAULT_TOOL_DESC = {
 #
 if __name__ == "__main__":
     config = {
-        "api_key": os.environ.get("OPENAI_API_KEY"),
-        "openai_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": os.environ.get("DASHSCOPE_API_KEY"),
         "model": "qwen-max",
-        "temperature": 0.001,
-        "top_p": 0.001,
+        "temperature": 0.00001,
+        "top_p": 0.00001,
         "max_tokens": 1500,
     }
-    llm = LlmFactory.create("openai", config)
+    llm = LlmFactory.create("aliyun", config)
     query = """
     My daughter's name is Hancy.
     Hancy likes playing football.
     Hancy has a cat named Cattie.
     """
-    extracted_entities = extract_entities_for_search("XiangWang", llm, query)
+    # query = "in which city is wx working?"
+    extracted_entities = extract_nodes_for_search("XiangWang", llm, query)
     print(extracted_entities)

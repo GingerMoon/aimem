@@ -9,7 +9,7 @@ from infra.llms.factory import LlmFactory
 
 logger = logging.getLogger(__name__)
 
-def abstract_out_mem(llm: LLMBase, content: str):
+def abstract_out_facts(llm: LLMBase, content: str):
     prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT)
     response = llm.generate_response(
         messages=[
@@ -90,14 +90,13 @@ If you do not find anything relevant facts, user memories, and preferences in th
 # "The given text does not provide any information about Cattie's owner or their age. Could you please provide more details or context?"
 if __name__ == "__main__":
     config = {
-        "api_key": os.environ.get("OPENAI_API_KEY"),
-        "openai_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": os.environ.get("DASHSCOPE_API_KEY"),
         "model": "qwen-max",
         "temperature": 0.001,
         "top_p": 0.001,
         "max_tokens": 1500,
     }
-    llm = LlmFactory.create("openai", config)
+    llm = LlmFactory.create("aliyun", config)
     content = "Input: user: Today I found my office was on fire. I immediately call 911. Fortunately, nobody got hurt."
-    facts = abstract_out_mem(llm, content)
+    facts = abstract_out_facts(llm, content)
     print(facts)

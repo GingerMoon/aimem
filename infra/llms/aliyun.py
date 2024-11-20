@@ -43,12 +43,12 @@ class DashscopeLlm(LLMBase):
                 "tool_calls": [],
             }
 
-            if output.choices[0].message.tool_calls:
+            if hasattr(output.choices[0].message, "tool_calls"):
                 for tool_call in output.choices[0].message.tool_calls:
                     processed_response["tool_calls"].append(
                         {
-                            "name": tool_call.function.name,
-                            "arguments": json.loads(tool_call.function.arguments),
+                            "name": tool_call["function"]["name"],
+                            "arguments": json.loads(tool_call["function"]["arguments"]),
                         }
                     )
 
