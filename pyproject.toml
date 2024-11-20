@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "aimem"
+version = "0.1.0"
+description = ""
+authors = ["Wang Xiang <376752150@qq.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.5"
+httpx = "^0.27.2"
+litellm = "^1.52.9"
+ollama = "^0.3.3"
+qdrant-client = "^1.9.1"
+pymilvus = "^2.4.9"
+dashscope = "^1.20.13"
+
+[tool.poetry.group.graph.dependencies]
+langchain-community = "^0.3.1"
+neo4j = "^5.23.1"
+rank-bm25 = "^0.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

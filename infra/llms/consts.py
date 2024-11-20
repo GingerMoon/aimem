@@ -1,0 +1,10 @@
+USER_ID = "USER_ID"
+ROLE = "role"
+SYSTEM = "system"
+USER = "user"
+CONTENT = "content"
+
+TOOL_CALLS = "tool_calls"
+ARGUMENTS = "arguments"
+ENTITIES = "entities"
+NAME = "name"
