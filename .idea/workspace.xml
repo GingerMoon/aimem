@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="dea9414a-9f59-4741-b609-45576be5059b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/llms/aliyun.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/llms/aliyun.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory/mem_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem_graph.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +86,7 @@
       <recent name="C:\Users\wangxiang1\workspace\aimem\mem_tools\vector" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.extract_nodes_for_search">
+  <component name="RunManager" selected="Python.mem">
     <configuration name="extract_nodes_for_search" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aimem" />
       <option name="ENV_FILES" value="" />
@@ -217,8 +216,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.extract_nodes_for_search" />
         <item itemvalue="Python.mem" />
+        <item itemvalue="Python.extract_nodes_for_search" />
         <item itemvalue="Python.mem_vec" />
         <item itemvalue="Python.mem_graph" />
         <item itemvalue="Python.update_mem_vec" />
@@ -247,39 +246,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/mem_vec.py</url>
-          <line>259</line>
-          <option name="timeStamp" value="131" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/mem_graph.py</url>
-          <line>179</line>
-          <option name="timeStamp" value="132" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/infra/llms/aliyun.py</url>
-          <line>45</line>
-          <option name="timeStamp" value="133" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/infra/llms/aliyun.py</url>
-          <line>39</line>
-          <option name="timeStamp" value="134" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mem_tools/graph/extract_entities_for_add_mem.py</url>
-          <line>27</line>
-          <option name="timeStamp" value="135" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/infra/llms/aliyun.py</url>
-          <line>96</line>
-          <option name="timeStamp" value="136" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/memory/mem_graph.py</url>
-          <line>121</line>
-          <option name="timeStamp" value="138" />
+          <url>file://$PROJECT_DIR$/mem_tools/graph/update_mem.py</url>
+          <line>31</line>
+          <option name="timeStamp" value="150" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

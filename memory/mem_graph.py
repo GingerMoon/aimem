@@ -122,6 +122,7 @@ class MemoryGraph:
     def _search(self, query, metadata, filters, limit=100):
         node_list = extract_nodes_for_search(metadata[f"{USER_NAME}"], self.llm, query)
         logger.info(f"Node list for search query : {node_list}")
+        node_set = set(node_list)
 
         result_relations = []
         node_list_hop1 = set()
@@ -162,7 +163,12 @@ class MemoryGraph:
             srds = self.graph.query(cypher_query, params=params)
             result_relations.extend(srds)
             for srd in srds:
-                node_list_hop1.add(srd["destination"])
+                s = srd["source"]
+                d = srd["destination"]
+                if s not in node_set:
+                    node_list_hop1.add(s)
+                if d not in node_set:
+                    node_list_hop1.add(d)
 
         logger.info(f"{node_list_hop1=}")
         for node in node_list_hop1:

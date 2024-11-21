@@ -304,21 +304,21 @@ if __name__ == "__main__":
 
     mem.delete_all(namespace)
 
-    content = "我的唯一的女儿的名字是Hancy。沙雀网络公司位于中国上海的松江区。Hancy喜欢踢足球。我在沙雀网络公司工作。"
+    content = "I have only one daughter whose name is Hancy. Shaque Network Inc. is in SongJiang District Shanghai China. Hancy likes playing football. I work for Shaque Network Inc."
     messages = [{"role": "user", "content": content}]
     memories = mem.add(messages, user_name, namespace)
 
-    content = "Hancy 不喜欢踢足球. 沙雀网络公司位于中国上海的宝山区。"
+    content = "Hancy doesn't like football. Shaque Network Inc. is in BaoShan District Shanghai China"
     messages = [{"role": "user", "content": content}]
     memories = mem.add(messages, user_name, namespace)
 
     logger.info(memories)
 
-    query = "你知道我在哪个城市工作吗?"
+    query = "Do you know where am I working?"
     # search_result = mem.search(query, user_name, namespace, 1)
     # logger.info(f"{search_result=}")
 
-    system_prompt = "你是wx的数字人分身.你拥有理解graph entities relations的能力.请基于你所知道的facts和graph entities relations来回答问题.在回答问题时，请用中文回答问题,并且尽量使用自然、流畅的语言，并且在回答中加入个人的观点和情感，使回答更加生动、有趣。同时，尝试在回答中穿插一些幽默或轻松的元素，让交流更加轻松愉快"
+    system_prompt = "你是wx的数字人分身.你拥有理解graph entities relations的能力.请基于你所知道的facts和graph entities relations来回答问题.在回答问题时，尽量使用自然、流畅的语言，并且在回答中加入个人的观点和情感，使回答更加生动、有趣。同时，尝试在回答中穿插一些幽默或轻松的元素，让交流更加轻松愉快"
 
     llm_ans = mem.chat(system_prompt, query, "wx", namespace)
     logger.info(f"{llm_ans}")
