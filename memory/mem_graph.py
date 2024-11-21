@@ -124,7 +124,7 @@ class MemoryGraph:
         logger.info(f"Node list for search query : {node_list}")
 
         result_relations = []
-        node_list_hop2 = set()
+        node_list_hop1 = set()
 
         cypher_query = f"""
             MATCH (n)
@@ -162,10 +162,10 @@ class MemoryGraph:
             srds = self.graph.query(cypher_query, params=params)
             result_relations.extend(srds)
             for srd in srds:
-                node_list_hop2.add(srd["destination"])
+                node_list_hop1.add(srd["destination"])
 
-        logger.info(f"{node_list_hop2=}")
-        for node in node_list_hop2:
+        logger.info(f"{node_list_hop1=}")
+        for node in node_list_hop1:
             n_embedding = self.embedding_model.embed(node)
             params = {
                 "n_embedding": n_embedding,
