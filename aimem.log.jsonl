@@ -1,0 +1,140 @@
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:29:393",
+  "loggerName": "httpx",
+  "filename": "_client.py",
+  "funcName": "_send_single_request",
+  "lineno": 1038,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:29:419",
+  "loggerName": "httpx",
+  "filename": "_client.py",
+  "funcName": "_send_single_request",
+  "lineno": 1038,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "HTTP Request: POST http://localhost:6333/collections/test/points/search \"HTTP/1.1 200 OK\""
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:32:362",
+  "loggerName": "root",
+  "filename": "extract_nodes_for_search.py",
+  "funcName": "extract_nodes_for_search",
+  "lineno": 40,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "extracted_entities={'content': '', 'tool_calls': [{'name': 'search_', 'arguments': {'nodes': ['wx'], 'relations': ['work in']}}]}"
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:32:362",
+  "loggerName": "root",
+  "filename": "mem_graph.py",
+  "funcName": "_search",
+  "lineno": 122,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "Node list for search query : ['wx']"
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:35:134",
+  "loggerName": "httpx",
+  "filename": "_client.py",
+  "funcName": "_send_single_request",
+  "lineno": 1038,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:35:140",
+  "loggerName": "root",
+  "filename": "mem_graph.py",
+  "funcName": "_search",
+  "lineno": 171,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "node_list_hop1={'shaque_network_inc.', 'hancy'}"
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:35:727",
+  "loggerName": "httpx",
+  "filename": "_client.py",
+  "funcName": "_send_single_request",
+  "lineno": 1038,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:37:457",
+  "loggerName": "httpx",
+  "filename": "_client.py",
+  "funcName": "_send_single_request",
+  "lineno": 1038,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:37:463",
+  "loggerName": "root",
+  "filename": "mem_graph.py",
+  "funcName": "search",
+  "lineno": 226,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "search_results=[{'source': 'hancy', 'relationship': 'dislikes', 'target': 'playing_football'}, {'source': 'shaque_network_inc.', 'relationship': 'located_in', 'target': 'songjiang_district,_shanghai,_china'}, {'source': 'wx', 'relationship': 'has_child', 'target': 'hancy'}, {'source': 'wx', 'relationship': 'works_for', 'target': 'shaque_network_inc.'}]"
+}
+{
+  "level": "INFO",
+  "processName": "MainProcess",
+  "processID": 63828,
+  "threadName": "MainThread",
+  "threadID": 33420,
+  "timestamp": "2024-11-22T17:23:37:463",
+  "loggerName": "root",
+  "filename": "mem.py",
+  "funcName": "chat",
+  "lineno": 255,
+  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
+  "message": "search_results: {'results': [{'id': '14fccda8-129f-4666-ace4-431046115a23', 'memory': 'Works for Shaque Network Inc.', 'hash': '39ffcc424525e2f75abb899a35e15b05', 'metadata': {'user_name': 'wx', 'namespace': 'n1'}, 'score': 0.4722924, 'created_at': '2024-11-21T23:16:46.761079-08:00', 'updated_at': None, 'namespace': 'n1'}], 'relations': [{'source': 'hancy', 'relationship': 'dislikes', 'target': 'playing_football'}, {'source': 'shaque_network_inc.', 'relationship': 'located_in', 'target': 'songjiang_district,_shanghai,_china'}, {'source': 'wx', 'relationship': 'has_child', 'target': 'hancy'}, {'source': 'wx', 'relationship': 'works_for', 'target': 'shaque_network_inc.'}]}"
+}

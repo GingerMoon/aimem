@@ -4,8 +4,6 @@ from infra.embeddings.base import BaseEmbedderConfig
 from infra.utils.reflection import load_class
 
 
-logger = logging.getLogger(__name__)
-
 class EmbedderFactory:
     provider_to_class = {
         "openai": "infra.embeddings.openai.OpenAIEmbedding",

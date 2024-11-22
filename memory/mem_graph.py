@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import os
@@ -21,8 +22,6 @@ from mem_tools.graph.extract_nodes_for_search import extract_nodes_for_search
 from mem_tools.graph.update_mem import update_mem
 from memory.consts import *
 
-logger = logging.getLogger(__name__)
-
 
 class MemoryGraph:
     def __init__(self, config: MemoryConfig = MemoryConfig()):
@@ -44,7 +43,7 @@ class MemoryGraph:
         self.threshold = 0.7
 
     # TODO store metadata in nodes/relations
-    def add(self, messages, metadata, filters):
+    async def add(self, messages, metadata, filters):
         """
         Adds data to the graph.
 
@@ -56,30 +55,40 @@ class MemoryGraph:
 
         data = "\n".join([msg["content"] for msg in messages if "content" in msg and msg["role"] != "system"])
 
-        # retrieve the search results
-        search_output = self._search(data, metadata, filters)
+        search_task = asyncio.create_task(self._search(data, metadata, filters))
+        extract_entities_task = asyncio.create_task(extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data))
+        search_output, extracted_entities = await asyncio.gather(search_task, extract_entities_task)
+        logging.info(f"{search_output=}")
+        logging.info(f"{extracted_entities=}")
 
-        extracted_entities = extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data)
-        logger.info(f"Extracted entities: {extracted_entities}")
+        # retrieve the search results
+        # search_output = self._search(data, metadata, filters)
+        #
+        # extracted_entities = extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data)
+        # logging.info(f"Extracted entities: {extracted_entities}")
+
+        tasks = [update_mem(self.llm, search_output, e) for e in extracted_entities]
+        results = await asyncio.gather(*tasks)
 
         to_be_added = []
         to_be_updated = []
-
-        for e in extracted_entities:
-            a, u = update_mem(self.llm, search_output, e)
+        for a, u in results:
             to_be_added.extend(a)
             to_be_updated.extend(u)
 
-        for item in to_be_updated:
-            self._update_relationship(
-                item["source"],
-                item["destination"],
-                item["relationship"],
-                filters,
-            )
+        logging.info(f"{to_be_added=}")
+        logging.info(f"{to_be_updated=}")
+
+        tasks = [self._update_relationship(
+            item["source"],
+            item["destination"],
+            item["relationship"],
+            filters,
+        ) for item in to_be_updated]
+        await asyncio.gather(*tasks)
 
         returned_entities = []
-        for item in to_be_added:
+        async def add_items(item):
             source = item["source"].lower().replace(" ", "_")
             source_type = item["source_type"].lower().replace(" ", "_")
             relation = item["relationship"].lower().replace(" ", "_")
@@ -115,13 +124,71 @@ class MemoryGraph:
 
             _ = self.graph.query(cypher, params=params)
 
-        logger.info(f"Added {len(to_be_added)} new memories to the graph")
+
+        tasks = [add_items(item) for item in to_be_added]
+        await asyncio.gather(*tasks)
+
+
+        # to_be_added = []
+        # to_be_updated = []
+
+        # for e in extracted_entities:
+        #     a, u = update_mem(self.llm, search_output, e)
+        #     to_be_added.extend(a)
+        #     to_be_updated.extend(u)
+
+        # for item in to_be_updated:
+        #     self._update_relationship(
+        #         item["source"],
+        #         item["destination"],
+        #         item["relationship"],
+        #         filters,
+        #     )
+
+        # returned_entities = []
+        # for item in to_be_added:
+        #     source = item["source"].lower().replace(" ", "_")
+        #     source_type = item["source_type"].lower().replace(" ", "_")
+        #     relation = item["relationship"].lower().replace(" ", "_")
+        #     destination = item["destination"].lower().replace(" ", "_")
+        #     destination_type = item["destination_type"].lower().replace(" ", "_")
+        #
+        #     returned_entities.append({"source": source, "relationship": relation, "target": destination})
+        #
+        #     # Create embeddings
+        #     source_embedding = self.embedding_model.embed(source)
+        #     dest_embedding = self.embedding_model.embed(destination)
+        #
+        #     # Updated Cypher query to include node types and embeddings
+        #     cypher = f"""
+        #     MERGE (n:{source_type} {{name: $source_name, {NAMESPACE}: ${NAMESPACE}}})
+        #     ON CREATE SET n.created = timestamp(), n.embedding = $source_embedding
+        #     ON MATCH SET n.embedding = $source_embedding
+        #     MERGE (m:{destination_type} {{name: $dest_name, {NAMESPACE}: ${NAMESPACE}}})
+        #     ON CREATE SET m.created = timestamp(), m.embedding = $dest_embedding
+        #     ON MATCH SET m.embedding = $dest_embedding
+        #     MERGE (n)-[rel:{relation}]->(m)
+        #     ON CREATE SET rel.created = timestamp()
+        #     RETURN n, rel, m
+        #     """
+        #
+        #     params = {
+        #         "source_name": source,
+        #         "dest_name": destination,
+        #         "source_embedding": source_embedding,
+        #         "dest_embedding": dest_embedding,
+        #         f"{NAMESPACE}": filters[f"{NAMESPACE}"],
+        #     }
+        #
+        #     _ = self.graph.query(cypher, params=params)
+
+        logging.info(f"Added {len(to_be_added)} new memories to the graph")
 
         return returned_entities
 
-    def _search(self, query, metadata, filters, limit=100):
+    async def _search(self, query, metadata, filters, limit=100):
         node_list = extract_nodes_for_search(metadata[f"{USER_NAME}"], self.llm, query)
-        logger.info(f"Node list for search query : {node_list}")
+        logging.info(f"node list returned by search : {node_list}")
         node_set = set(node_list)
 
         result_relations = []
@@ -170,7 +237,9 @@ class MemoryGraph:
                 if d not in node_set:
                     node_list_hop1.add(d)
 
-        logger.info(f"{node_list_hop1=}")
+        logging.info(f"{result_relations=}")
+
+        logging.info(f"{node_list_hop1=}")
         for node in node_list_hop1:
             n_embedding = self.embedding_model.embed(node)
             params = {
@@ -182,9 +251,10 @@ class MemoryGraph:
             srds = self.graph.query(cypher_query, params=params)
             result_relations.extend(srds)
 
+        logging.info(f"{result_relations=}")
         return result_relations
 
-    def search(self, query, metadata, filters, limit=100):
+    async def search(self, query, metadata, filters, limit=100):
         """
         Search for memories and related graph data.
 
@@ -200,7 +270,7 @@ class MemoryGraph:
                 - "entities": List of related graph data based on the query.
         """
 
-        search_output = self._search(query, metadata, filters, limit)
+        search_output = await self._search(query, metadata, filters, limit)
 
         if not search_output:
             return []
@@ -225,11 +295,11 @@ class MemoryGraph:
         for item in reranked_results:
             search_results.append({"source": item[0], "relationship": item[1], "target": item[2]})
 
-        logger.info(f"{search_results=}")
+        logging.info(f"{search_results=}")
 
         return search_results
 
-    def delete_all(self, filters):
+    async def delete_all(self, filters):
         cypher = f"""
         MATCH (n {{{NAMESPACE}: ${NAMESPACE}}})
         DETACH DELETE n
@@ -237,7 +307,7 @@ class MemoryGraph:
         params = {f"{NAMESPACE}": filters[f"{NAMESPACE}"]}
         self.graph.query(cypher, params=params)
 
-    def get_all(self, filters, limit=100):
+    async def get_all(self, filters, limit=100):
         """
         Retrieves all nodes and relationships from the graph database based on optional filtering criteria.
 
@@ -268,11 +338,11 @@ class MemoryGraph:
                 }
             )
 
-        logger.info(f"Retrieved {len(final_results)} relationships")
+        logging.info(f"Retrieved {len(final_results)} relationships")
 
         return final_results
 
-    def _update_relationship(self, source, target, relationship, filters):
+    async def _update_relationship(self, source, target, relationship, filters):
         """
         Update or create a relationship between two nodes in the graph.
 
@@ -285,7 +355,7 @@ class MemoryGraph:
         Raises:
             Exception: If the operation fails.
         """
-        logger.info(f"Updating relationship: {source} -{relationship}-> {target}")
+        logging.info(f"Updating relationship: {source} -{relationship}-> {target}")
 
         relationship = relationship.lower().replace(" ", "_")
 
@@ -323,7 +393,7 @@ class MemoryGraph:
         if not result:
             raise Exception(f"Failed to update or create relationship between {source} and {target}")
 
-if __name__ == "__main__":
+async def __test__():
     config_dict = {
         "version": "v1.1",
         "graph_store": {
@@ -369,16 +439,20 @@ if __name__ == "__main__":
 
     mem = MemoryGraph(config)
 
-    filters = {f"{NAMESPACE}": "n1"}
-    mem.delete_all(filters)
+    # await mem.delete_all(filters)
 
-    content = "My only daughter's name is Hancy. Hancy likes playing football. I work for Giant Network Inc.."
-    messages = [{"role": "user", "content": content}]
-    memories = mem.add(messages, metadata, filters)
+    # content = "My only daughter's name is Hancy. Hancy likes playing football. I work for Giant Network Inc.."
+    # messages = [{"role": "user", "content": content}]
+    # memories = await mem.add(messages, metadata, filters)
+    # logging.info(f"{memories=}")
 
     content = "Hancy doesn't likes playing football. Giant Network Inc. is located in SongJiang District Shanghai China."
     messages = [{"role": "user", "content": content}]
-    memories = mem.add(messages, metadata, filters)
-    logger.info(f"{memories=}")
+    memories = await mem.add(messages, metadata, filters)
+    logging.info(f"{memories=}")
+
+
+if __name__ == "__main__":
+    asyncio.run(__test__())
 
 

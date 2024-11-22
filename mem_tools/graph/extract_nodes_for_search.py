@@ -10,11 +10,10 @@ from mem_tools.graph.extract_entities_for_add_mem import (
     DESTINATION_NODE
 )
 
-logger = logging.getLogger(__name__)
 
 def extract_nodes_for_search_2(user_name: str, llm: LLMBase, query: str):
     extracted_entities = extract_entities_for_add_mem(user_name, llm, query)
-    logger.info(extracted_entities)
+    logging.info(extracted_entities)
 
     node_list = []
     for item in extracted_entities:
@@ -38,7 +37,7 @@ def extract_nodes_for_search(user_name: str, llm: LLMBase, query: str):
         ],
         tools=tools,
     )
-    logger.info(f"{extracted_entities=}")
+    logging.debug(f"{extracted_entities=}")
 
     # TODO also take relation into account
     node_list = []
@@ -47,9 +46,9 @@ def extract_nodes_for_search(user_name: str, llm: LLMBase, query: str):
             try:
                 node_list.extend(item[ARGUMENTS][SEARCH_PARAMETER_NODES])
             except Exception as e:
-                logger.error(f"Error in search tool: {e}")
+                logging.error(f"Error in search tool: {e}")
         else:
-            logger.error(f"unsupported function {item[NAME]}")
+            logging.error(f"unsupported function {item[NAME]}")
 
     node_list = list(set(node_list))
     node_list = [node.lower().replace(" ", "_") for node in node_list]

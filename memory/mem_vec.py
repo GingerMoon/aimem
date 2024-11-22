@@ -13,8 +13,6 @@ from mem_tools.vector.abstract_out_mem import abstract_out_facts
 from mem_tools.vector.update_mem import *
 from memory.consts import *
 
-logger = logging.getLogger(__name__)
-
 
 class MemoryVector:
     def __init__(self, config: MemoryConfig = MemoryConfig()):
@@ -190,7 +188,7 @@ class MemoryVector:
         return all_memories
 
 
-    def search(self, query, filters, limit):
+    async def search(self, query, filters, limit):
         embeddings = self.embedding_model.embed(query)
         memories = self.vector_store.search(query=embeddings, limit=limit, filters=filters)
 

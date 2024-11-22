@@ -7,7 +7,6 @@ from infra.llms.base import LLMBase
 from infra.llms.factory import LlmFactory
 from infra.utils.format import strip_markdown_json_flag
 
-logger = logging.getLogger(__name__)
 
 def llm_plan_update_mem(llm: LLMBase, existing_memories, new_memories):
 
@@ -21,13 +20,13 @@ def llm_plan_update_mem(llm: LLMBase, existing_memories, new_memories):
             CONTENT: prompt,
         },
     ]
-    logger.info(f"messages:\n{messages}")
+    logging.info(f"messages:\n{messages}")
 
     resp = llm.generate_response(
         messages=messages,
         response_format={"type": "json_object"},
     )
-    logger.info(f"new_memories_with_actions:\n{resp}")
+    logging.info(f"new_memories_with_actions:\n{resp}")
 
     resp = strip_markdown_json_flag(resp)
     new_memories_with_actions = json.loads(resp)

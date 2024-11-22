@@ -10,9 +10,7 @@ try:
 except ImportError:
     raise ImportError("The 'psycopg2' library is required. Please install it using 'pip install psycopg2'.")
 
-from mem0.vector_stores.base import VectorStoreBase
-
-logger = logging.getLogger(__name__)
+from infra.vector_stores.base import VectorStoreBase
 
 
 class OutputData(BaseModel):
@@ -99,7 +97,7 @@ class PGVector(VectorStoreBase):
             payloads (List[Dict], optional): List of payloads corresponding to vectors.
             ids (List[str], optional): List of IDs corresponding to vectors.
         """
-        logger.info(f"Inserting {len(vectors)} vectors into collection {self.collection_name}")
+        logging.info(f"Inserting {len(vectors)} vectors into collection {self.collection_name}")
         json_payloads = [json.dumps(payload) for payload in payloads]
 
         data = [(id, vector, payload) for id, vector, payload in zip(ids, vectors, json_payloads)]

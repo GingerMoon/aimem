@@ -1,3 +1,4 @@
+import asyncio
 import concurrent
 from typing import Any, Dict
 
@@ -8,9 +9,6 @@ from memory.config import MemoryConfig
 from mem_tools.vector.update_mem import *
 from memory.mem_vec import MemoryVector
 from memory.consts import *
-
-logger = logging.getLogger(__name__)
-
 
 class Memory(MemoryBase):
     def __init__(self, config: MemoryConfig = MemoryConfig()):
@@ -33,7 +31,7 @@ class Memory(MemoryBase):
         try:
             config = MemoryConfig(**config_dict)
         except ValidationError as e:
-            logger.error(f"Configuration validation error: {e}")
+            logging.error(f"Configuration validation error: {e}")
             raise
         return cls(config)
 
@@ -137,7 +135,7 @@ class Memory(MemoryBase):
         else:
             return {"results": all_memories}
 
-    def search(self, query, user_name, namespace, limit=100, filters=None):
+    async def search(self, query, user_name, namespace, limit=100, filters=None):
         """
         Search for memories.
 
@@ -159,20 +157,9 @@ class Memory(MemoryBase):
         # graph search will use llm planning tool to extract entities from query, which needs user name.
         metadata = {USER_NAME: user_name}
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            vec_memories_future = executor.submit(self.vec_mem.search, query, filters, limit)
-            graph_memories_future = (
-                executor.submit(self.graph.search, query, metadata, filters, limit)
-                if self.enable_graph
-                else None
-            )
-
-            concurrent.futures.wait(
-                [vec_memories_future, graph_memories_future] if graph_memories_future else [vec_memories_future]
-            )
-
-            original_memories = vec_memories_future.result()
-            graph_entities = graph_memories_future.result() if graph_memories_future else None
+        vec_task = asyncio.create_task(self.vec_mem.search(query, filters, limit))
+        graph_task = asyncio.create_task(self.graph.search(query, metadata, filters, limit))
+        original_memories, graph_entities = await asyncio.gather(vec_task, graph_task)
 
         if self.enable_graph:
             return {"results": original_memories, "relations": graph_entities}
@@ -230,8 +217,8 @@ class Memory(MemoryBase):
         """
         self.vec_mem.reset()
 
-    def chat(self, system_prompt, query, user_name, namespace):
-        retrival_results = self.search(query, user_name, namespace, limit=1)
+    async def chat(self, system_prompt, query, user_name, namespace):
+        retrival_results = await self.search(query, user_name, namespace, limit=1)
         logging.info(f"search_results: {retrival_results}")
 
         facts = []
@@ -259,7 +246,7 @@ class Memory(MemoryBase):
         return {"answer": answer, "retrival_results": retrival_results}
 
 
-if __name__ == "__main__":
+async def __test__():
     config_dict = {
         "graph_store": {
             "provider": "neo4j",
@@ -312,7 +299,7 @@ if __name__ == "__main__":
     messages = [{"role": "user", "content": content}]
     memories = mem.add(messages, user_name, namespace)
 
-    logger.info(memories)
+    logging.info(memories)
 
     query = "Do you know where am I working?"
     # search_result = mem.search(query, user_name, namespace, 1)
@@ -320,5 +307,8 @@ if __name__ == "__main__":
 
     system_prompt = "你是wx的数字人分身.你拥有理解graph entities relations的能力.请基于你所知道的facts和graph entities relations来回答问题.在回答问题时，尽量使用自然、流畅的语言，并且在回答中加入个人的观点和情感，使回答更加生动、有趣。同时，尝试在回答中穿插一些幽默或轻松的元素，让交流更加轻松愉快"
 
-    llm_ans = mem.chat(system_prompt, query, "wx", namespace)
-    logger.info(f"{llm_ans}")
+    llm_ans = await mem.chat(system_prompt, query, "wx", namespace)
+    logging.info(f"{llm_ans}")
+
+if __name__ == "__main__":
+    asyncio.run(__test__())

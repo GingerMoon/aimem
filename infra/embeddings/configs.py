@@ -3,8 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-logger = logging.getLogger(__name__)
-
 class EmbedderConfig(BaseModel):
     provider: str = Field(
         description="Provider of the embedding model (e.g., 'ollama', 'openai')",

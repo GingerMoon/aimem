@@ -8,8 +8,6 @@ import dashscope
 from infra.llms.base import LLMBase
 from infra.llms.config.base_cfg import BaseLlmConfig
 
-logger = logging.getLogger(__name__)
-
 class DashscopeLlm(LLMBase):
     def __init__(self, config: Optional[BaseLlmConfig] = None):
         super().__init__(config)
@@ -32,7 +30,7 @@ class DashscopeLlm(LLMBase):
             str or dict: The processed response.
         """
         if(response.status_code != 200):
-            logger.error(f"status code: {response.status_code}, message: {response.message}, request id: {response.request_id}")
+            logging.error(f"status code: {response.status_code}, message: {response.message}, request id: {response.request_id}")
             return
 
         output = response.output

@@ -16,8 +16,6 @@ from qdrant_client.models import (
 
 from infra.vector_stores.base import VectorStoreBase
 
-logger = logging.getLogger(__name__)
-
 
 class Qdrant(VectorStoreBase):
     def __init__(
@@ -98,7 +96,7 @@ class Qdrant(VectorStoreBase):
             payloads (list, optional): List of payloads corresponding to vectors. Defaults to None.
             ids (list, optional): List of IDs corresponding to vectors. Defaults to None.
         """
-        logger.info(f"Inserting {len(vectors)} vectors into collection {self.collection_name}")
+        logging.info(f"Inserting {len(vectors)} vectors into collection {self.collection_name}")
         points = [
             PointStruct(
                 id=idx if ids is None else ids[idx],

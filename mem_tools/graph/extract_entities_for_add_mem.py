@@ -6,8 +6,6 @@ from infra.llms.base import LLMBase
 from infra.llms.factory import LlmFactory
 from pydantic import BaseModel, Field
 
-logger = logging.getLogger(__name__)
-
 
 class GraphEntitiy(BaseModel):
     destination_node: str = Field(
@@ -22,7 +20,7 @@ class GraphEntitiy(BaseModel):
     )
 
 
-def extract_entities_for_add_mem(user_name: str, llm: LLMBase, data: str) -> GraphEntitiy:
+async def extract_entities_for_add_mem(user_name: str, llm: LLMBase, data: str) -> GraphEntitiy:
     prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(user_name=user_name)
     tools = [_tool_description.get(llm.config.model, _DEFAULT_TOOL_DESC)]
     extracted_entities = llm.generate_response(
@@ -35,7 +33,7 @@ def extract_entities_for_add_mem(user_name: str, llm: LLMBase, data: str) -> Gra
         ],
         tools=tools,
     )
-    logger.info(extracted_entities)
+    logging.debug(extracted_entities)
 
     if extracted_entities[TOOL_CALLS]:
         extracted_entities = extracted_entities[TOOL_CALLS][0][ARGUMENTS][ENTITIES]

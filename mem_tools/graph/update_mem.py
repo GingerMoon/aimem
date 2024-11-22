@@ -5,9 +5,7 @@ from infra.llms.consts import *
 from infra.llms.base import LLMBase
 from infra.llms.factory import LlmFactory
 
-logger = logging.getLogger(__name__)
-
-def update_mem(llm: LLMBase, existing_memories, new_memories):
+async def update_mem(llm: LLMBase, existing_memories, new_memories):
     prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT).format(existing_memories=existing_memories, memory=new_memories)
     tools = [_tool_description_update.get(llm.config.model, _DEFAULT_TOOL_DESC_UPDATE),
              _tool_description_add.get(llm.config.model, _DEFAULT_TOOL_DESC_ADD),
@@ -21,7 +19,7 @@ def update_mem(llm: LLMBase, existing_memories, new_memories):
         ],
         tools=tools,
     )
-    logger.info(memory_updates)
+    logging.info(memory_updates)
 
     to_be_added = []
     to_be_updated = []
@@ -204,8 +202,8 @@ if __name__ == "__main__":
         },
     ]
     to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memories)
-    logger.info(f"{to_be_added=}")
-    logger.info(f"{to_be_updated=}")
+    logging.info(f"{to_be_added=}")
+    logging.info(f"{to_be_updated=}")
 
     new_memories = [
         {

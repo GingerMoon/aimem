@@ -16,7 +16,6 @@ app = FastAPI(on_startup=[configure_logging])
 app.add_middleware(asgi_correlation_id.CorrelationIdMiddleware)
 router = APIRouter()
 
-logger = logging.getLogger(__name__)
 
 @router.post("/memory/add")
 async def add_memory(payload: AddPayload):
@@ -28,7 +27,7 @@ async def delete_memory(namespace: str):
 
 @router.post("/chat")
 async def add_memory(payload: ChatPayload):
-    return mem.chat(payload.system_prompt, payload.query, payload.user_name, payload.namespace)
+    return await mem.chat(payload.system_prompt, payload.query, payload.user_name, payload.namespace)
 
 app.include_router(router)
 

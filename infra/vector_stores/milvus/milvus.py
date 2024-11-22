@@ -13,8 +13,6 @@ except ImportError:
 
 from pymilvus import CollectionSchema, DataType, FieldSchema, MilvusClient
 
-logger = logging.getLogger(__name__)
-
 
 class OutputData(BaseModel):
     id: Optional[str]  # memory id
@@ -65,7 +63,7 @@ class MilvusDB(VectorStoreBase):
         """
 
         if self.client.has_collection(collection_name):
-            logger.info(f"Collection {collection_name} already exists. Skipping creation.")
+            logging.info(f"Collection {collection_name} already exists. Skipping creation.")
         else:
             fields = [
                 FieldSchema(name="id", dtype=DataType.VARCHAR, is_primary=True, max_length=512),

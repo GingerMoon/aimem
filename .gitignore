@@ -185,3 +185,9 @@ eval/
 qdrant_storage/
 .crossnote
 testing.ipynb
+
+.idea/
+
+*.log
+*.log.json
+*.log.jsonl

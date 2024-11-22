@@ -7,8 +7,6 @@ from infra.llms.consts import *
 from infra.llms.base import LLMBase
 from infra.llms.factory import LlmFactory
 
-logger = logging.getLogger(__name__)
-
 def abstract_out_facts(llm: LLMBase, content: str):
     prompt = _prompt_dict.get(llm.config.model, _DEFAULT_PROMPT)
     response = llm.generate_response(
@@ -24,7 +22,7 @@ def abstract_out_facts(llm: LLMBase, content: str):
         ],
         response_format={"type": "json_object"},
     )
-    logger.info(response)
+    logging.info(response)
 
     try:
         new_retrieved_facts = json.loads(response)["facts"]
