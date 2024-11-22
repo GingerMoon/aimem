@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from config import MemoryConfig
+from memory.config import MemoryConfig
 
 try:
     from langchain_community.graphs import Neo4jGraph
@@ -19,7 +19,7 @@ from infra.embeddings.factory import EmbedderFactory
 from mem_tools.graph.extract_entities_for_add_mem import extract_entities_for_add_mem
 from mem_tools.graph.extract_nodes_for_search import extract_nodes_for_search
 from mem_tools.graph.update_mem import update_mem
-from consts import *
+from memory.consts import *
 
 logger = logging.getLogger(__name__)
 

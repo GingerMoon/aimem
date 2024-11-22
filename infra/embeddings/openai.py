@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 
@@ -6,6 +7,7 @@ from openai import OpenAI
 from infra.embeddings.base import EmbeddingBase
 from infra.embeddings.config.base_cfg import BaseEmbedderConfig
 
+logger = logging.getLogger(__name__)
 
 class OpenAIEmbedding(EmbeddingBase):
     def __init__(self, config: Optional[BaseEmbedderConfig] = None):

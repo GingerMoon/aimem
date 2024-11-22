@@ -3,11 +3,11 @@ from typing import Any, Dict
 
 from pydantic import ValidationError
 
-from base import MemoryBase
-from config import MemoryConfig
+from memory.base import MemoryBase
+from memory.config import MemoryConfig
 from mem_tools.vector.update_mem import *
 from memory.mem_vec import MemoryVector
-from consts import *
+from memory.consts import *
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class Memory(MemoryBase):
         self.enable_graph = False
 
         if self.config.graph_store.config:
-            from mem_graph import MemoryGraph
+            from memory.mem_graph import MemoryGraph
 
             self.graph = MemoryGraph(self.config)
             self.enable_graph = True
@@ -38,12 +38,12 @@ class Memory(MemoryBase):
         return cls(config)
 
     def add(
-        self,
-        messages,
-        user_name,
-        namespace,
-        metadata=None,
-        filters=None,
+            self,
+            messages,
+            user_name,
+            namespace,
+            metadata=None,
+            filters=None,
     ):
         """
         Create a new memory.
@@ -72,8 +72,10 @@ class Memory(MemoryBase):
         if filters is None:
             filters = {}
 
-        metadata[USER_NAME] = user_name
-        filters[NAMESPACE] = namespace
+        if USER_NAME not in metadata:
+            metadata[USER_NAME] = user_name
+        if NAMESPACE not in filters:
+            filters[NAMESPACE] = namespace
 
         if isinstance(messages, str):
             messages = [{"role": "user", "content": messages}]
@@ -91,7 +93,6 @@ class Memory(MemoryBase):
             "vector_memory": vector_store_result,
             "graph_memory": graph_result,
         }
-
 
     def get(self, memory_id):
         """
@@ -136,7 +137,6 @@ class Memory(MemoryBase):
         else:
             return {"results": all_memories}
 
-
     def search(self, query, user_name, namespace, limit=100, filters=None):
         """
         Search for memories.
@@ -178,7 +178,6 @@ class Memory(MemoryBase):
             return {"results": original_memories, "relations": graph_entities}
         else:
             return {"results": original_memories}
-
 
     def update(self, memory_id, data):
         """
@@ -225,7 +224,6 @@ class Memory(MemoryBase):
 
         return {"message": "Memories deleted successfully!"}
 
-
     def reset(self):
         """
         Reset the memory store.
@@ -233,19 +231,20 @@ class Memory(MemoryBase):
         self.vec_mem.reset()
 
     def chat(self, system_prompt, query, user_name, namespace):
-        search_results = self.search(query, user_name, namespace, limit=1)
-        logging.info(f"search_results: {search_results}")
+        retrival_results = self.search(query, user_name, namespace, limit=1)
+        logging.info(f"search_results: {retrival_results}")
 
         facts = []
-        for r in search_results["results"]:
+        for r in retrival_results["results"]:
             facts.append(r["memory"])
         if len(facts) > 0:
             system_prompt = system_prompt + "\n facts: \n" + json.dumps(facts, ensure_ascii=False)
 
-        if 'relations' in search_results:
-            system_prompt = system_prompt + "\n graph entities relations: \n" + json.dumps(search_results["relations"], ensure_ascii=False)
+        if 'relations' in retrival_results:
+            system_prompt = system_prompt + "\n graph entities relations: \n" + json.dumps(
+                retrival_results["relations"], ensure_ascii=False)
 
-        response = self.llm.generate_response(
+        answer = self.llm.generate_response(
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": query},
@@ -257,7 +256,8 @@ class Memory(MemoryBase):
         #     return data['answer']
         # if '回答' in data:
         #     return data['回答']
-        return response
+        return {"answer": answer, "retrival_results": retrival_results}
+
 
 if __name__ == "__main__":
     config_dict = {

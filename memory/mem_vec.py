@@ -4,14 +4,14 @@ from datetime import datetime
 
 import pytz
 
-from config import MemoryConfig
+from memory.config import MemoryConfig
 from infra.embeddings.factory import EmbedderFactory
 from infra.utils.llm import parse_messages
 from infra.vector_stores.factory import VectorStoreFactory
-from mem_item import MemoryItem
+from memory.mem_item import MemoryItem
 from mem_tools.vector.abstract_out_mem import abstract_out_facts
 from mem_tools.vector.update_mem import *
-from consts import *
+from memory.consts import *
 
 logger = logging.getLogger(__name__)
 

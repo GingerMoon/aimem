@@ -6,8 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="dea9414a-9f59-4741-b609-45576be5059b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infra/embeddings/configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/configs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infra/embeddings/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infra/embeddings/ollama.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/ollama.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infra/embeddings/openai.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/openai.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem_graph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory/mem_vec.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem_vec.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,15 +60,17 @@
   "keyToString": {
     "Python.abstract_out_mem.executor": "Run",
     "Python.aliyun.executor": "Run",
+    "Python.app.executor": "Debug",
     "Python.dashscope (1).executor": "Run",
     "Python.dashscope.executor": "Debug",
     "Python.dashscope1.executor": "Debug",
     "Python.extract_entities_for_add_mem.executor": "Run",
     "Python.extract_entities_for_search.executor": "Run",
     "Python.extract_nodes_for_search (1).executor": "Run",
-    "Python.extract_nodes_for_search.executor": "Debug",
+    "Python.extract_nodes_for_search.executor": "Run",
     "Python.graph_memory.executor": "Run",
-    "Python.mem.executor": "Debug",
+    "Python.main.executor": "Run",
+    "Python.mem.executor": "Run",
     "Python.mem_graph.executor": "Run",
     "Python.mem_vec.executor": "Run",
     "Python.memory.executor": "Run",
@@ -70,23 +80,48 @@
     "Python.vector_memory.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/wangxiang1/workspace/research/aimem/memory",
+    "last_opened_file_path": "C:/Users/wangxiang1/workspace/aimem/app",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\wangxiang1\workspace\aimem\app" />
+      <recent name="C:\Users\wangxiang1\workspace\aimem" />
       <recent name="C:\Users\wangxiang1\workspace\research\aimem\memory" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\infra\llms" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\mem_tools\vector" />
-      <recent name="C:\Users\wangxiang1\workspace\aimem\infra\utils" />
-      <recent name="C:\Users\wangxiang1\workspace\aimem\memory" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\wangxiang1\workspace\aimem\app" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\mem_tools\vector" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.mem">
+  <component name="RunManager" selected="Python.app">
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="aimem" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+        <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="extract_nodes_for_search" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aimem" />
       <option name="ENV_FILES" value="" />
@@ -183,44 +218,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="update_mem_vec" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="aimem" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
-        <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mem_tools/vector" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mem_tools/vector/update_mem.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
+      <item itemvalue="Python.app" />
       <item itemvalue="Python.extract_nodes_for_search" />
       <item itemvalue="Python.mem" />
       <item itemvalue="Python.mem_vec" />
-      <item itemvalue="Python.update_mem_vec" />
       <item itemvalue="Python.mem_graph" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.app" />
         <item itemvalue="Python.mem" />
         <item itemvalue="Python.extract_nodes_for_search" />
         <item itemvalue="Python.mem_vec" />
         <item itemvalue="Python.mem_graph" />
-        <item itemvalue="Python.update_mem_vec" />
       </list>
     </recent_temporary>
   </component>
@@ -249,6 +260,16 @@
           <url>file://$PROJECT_DIR$/mem_tools/graph/update_mem.py</url>
           <line>31</line>
           <option name="timeStamp" value="150" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/AppData/Local/pypoetry/Cache/virtualenvs/aimem-QL1W1oV2-py3.12/Lib/site-packages/asgi_correlation_id/middleware.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="157" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/AppData/Local/pypoetry/Cache/virtualenvs/aimem-QL1W1oV2-py3.12/Lib/site-packages/asgi_correlation_id/middleware.py</url>
+          <line>89</line>
+          <option name="timeStamp" value="158" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,9 +1,12 @@
+import logging
 import subprocess
 import sys
 from typing import Optional
 
 from infra.embeddings.base import EmbeddingBase
 from infra.embeddings.config.base_cfg import BaseEmbedderConfig
+
+logger = logging.getLogger(__name__)
 
 try:
     from ollama import Client
@@ -14,10 +17,10 @@ except ImportError:
             subprocess.check_call([sys.executable, "-m", "pip", "install", "ollama"])
             from ollama import Client
         except subprocess.CalledProcessError:
-            print("Failed to install 'ollama'. Please install it manually using 'pip install ollama'.")
+            logger.error("Failed to install 'ollama'. Please install it manually using 'pip install ollama'.")
             sys.exit(1)
     else:
-        print("The required 'ollama' library is not installed.")
+        logger.error("The required 'ollama' library is not installed.")
         sys.exit(1)
 
 
