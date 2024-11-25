@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 
@@ -158,8 +159,7 @@ _DEFAULT_TOOL_DESC_NOOP = {
 }
 
 
-# "The given text does not provide any information about Cattie's owner or their age. Could you please provide more details or context?"
-if __name__ == "__main__":
+async def __test__():
     config = {
         "api_key": os.environ.get("DASHSCOPE_API_KEY"),
         "model": "qwen-max",
@@ -170,56 +170,127 @@ if __name__ == "__main__":
     llm = LlmFactory.create("aliyun", config)
     existing_memories = [
         {
-            "destination_node": "Hancy",
-            "destination_type": "person",
-            "relation": "HAS_CHILD",
-            "source_node": "XiangWang",
-            "source_type": "person",
+            "source": "shaque_network_inc.",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:11",
+            "relation": "located_in",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:14",
+            "destination": "songjiang_district,_shanghai,_china",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:12",
+            "similarity": 1.0
         },
         {
-            "destination_node": "playing football",
-            "destination_type": "activity",
-            "relation": "LIKES",
-            "source_node": "Hancy",
-            "source_type": "person",
+            "source": "wx",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:5",
+            "relation": "works_for",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:5",
+            "destination": "shaque_network_inc.",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:11",
+            "similarity": 1.0
+        },
+        {
+            "source": "hancy",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:10",
+            "relation": "dislikes",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:4",
+            "destination": "playing_football",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:1",
+            "similarity": 1.0
+        },
+        {
+            "source": "wx",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:5",
+            "relation": "has_child",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:1",
+            "destination": "hancy",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:10",
+            "similarity": 1.0
+        },
+        {
+            "source": "hancy",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:10",
+            "relation": "dislikes",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:4",
+            "destination": "playing_football",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:1",
+            "similarity": 0.8095
+        },
+        {
+            "source": "hancy",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:10",
+            "relation": "dislikes",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:4",
+            "destination": "playing_football",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:1",
+            "similarity": 1.0
+        },
+        {
+            "source": "wx",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:5",
+            "relation": "works_for",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:5",
+            "destination": "shaque_network_inc.",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:11",
+            "similarity": 1.0
+        },
+        {
+            "source": "wx",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:5",
+            "relation": "has_child",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:1",
+            "destination": "hancy",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:10",
+            "similarity": 1.0
+        },
+        {
+            "source": "shaque_network_inc.",
+            "source_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:11",
+            "relation": "located_in",
+            "relation_id": "5:fb827e2b-6dda-4c78-b677-77da327248c2:14",
+            "destination": "songjiang_district,_shanghai,_china",
+            "destination_id": "4:fb827e2b-6dda-4c78-b677-77da327248c2:12",
+            "similarity": 1.0
         }
     ]
     new_memories = [
         {
-            "destination_node": "Hancy",
-            "destination_type": "person",
-            "relation": "HAS_CHILD",
-            "source_node": "XiangWang",
-            "source_type": "person",
-        },
-        {
-            "destination_node": "cat",
-            "destination_type": "pet",
-            "relation": "owns",
             "source_node": "Hancy",
             "source_type": "person",
+            "relation": "DISLIKES",
+            "destination_node": "football",
+            "destination_type": "sport"
         },
+        {
+            "source_node": "Shaque Network Inc.",
+            "source_type": "company",
+            "relation": "LOCATED_IN",
+            "destination_node": "BaoShan District, Shanghai, China",
+            "destination_type": "location"
+        }
     ]
-    to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memories)
+    to_be_added, to_be_updated = await update_mem(llm, existing_memories, new_memories)
     logging.info(f"{to_be_added=}")
     logging.info(f"{to_be_updated=}")
 
-    new_memories = [
-        {
-            "destination_node": "Hancy",
-            "destination_type": "person",
-            "relation": "HAS_CHILD",
-            "source_node": "XiangWang",
-            "source_type": "person",
-        },
-        {
-            "destination_node": "playing football",
-            "destination_type": "activity",
-            "relation": "DOES_NOT_LIKE",
-            "source_node": "Hancy",
-            "source_type": "person",
-        }
-    ]
-    to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memories)
-    logger.info(f"{to_be_added=}")
-    logger.info(f"{to_be_updated=}")
+    # new_memories = [
+    #     {
+    #         "destination_node": "Hancy",
+    #         "destination_type": "person",
+    #         "relation": "HAS_CHILD",
+    #         "source_node": "XiangWang",
+    #         "source_type": "person",
+    #     },
+    #     {
+    #         "destination_node": "playing football",
+    #         "destination_type": "activity",
+    #         "relation": "DOES_NOT_LIKE",
+    #         "source_node": "Hancy",
+    #         "source_type": "person",
+    #     }
+    # ]
+    # to_be_added, to_be_updated = update_mem(llm, existing_memories, new_memories)
+    # logging.info(f"{to_be_added=}")
+    # logging.info(f"{to_be_updated=}")
+
+# "The given text does not provide any information about Cattie's owner or their age. Could you please provide more details or context?"
+if __name__ == "__main__":
+    asyncio.run(__test__())

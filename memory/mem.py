@@ -167,9 +167,9 @@ class Memory(MemoryBase):
         original_memories, graph_entities = await asyncio.gather(vec_task, graph_task)
 
         if self.enable_graph:
-            return {"results": original_memories, "relations": graph_entities}
+            return {"vector_mem": original_memories, "graph_mem": graph_entities}
         else:
-            return {"results": original_memories}
+            return {"vector_mem": original_memories}
 
     def update(self, memory_id, data):
         """
@@ -298,11 +298,11 @@ async def __test__():
 
     content = "I have only one daughter whose name is Hancy. Shaque Network Inc. is in SongJiang District Shanghai China. Hancy likes playing football. I work for Shaque Network Inc."
     messages = [{"role": "user", "content": content}]
-    memories = mem.add(messages, user_name, namespace)
+    memories = await mem.add(messages, user_name, namespace)
 
     content = "Hancy doesn't like football. Shaque Network Inc. is in BaoShan District Shanghai China"
     messages = [{"role": "user", "content": content}]
-    memories = mem.add(messages, user_name, namespace)
+    memories = await mem.add(messages, user_name, namespace)
 
     logging.info(memories)
 

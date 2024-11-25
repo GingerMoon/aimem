@@ -59,9 +59,9 @@ class MemoryGraph:
 
         search_task = asyncio.create_task(self._search(data, metadata, filters))
         extract_entities_task = asyncio.create_task(extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data))
-        existing_entities, entities_from_query = await asyncio.gather(search_task, extract_entities_task)
-        logging.info(f"{existing_entities=}")
-        logging.info(f"{entities_from_query=}")
+        existing_srds, srds_from_input = await asyncio.gather(search_task, extract_entities_task)
+        logging.info(f"{json.dumps(existing_srds)=}")
+        logging.info(f"{json.dumps(srds_from_input)=}")
 
         # retrieve the search results
         # search_output = self._search(data, metadata, filters)
@@ -69,7 +69,7 @@ class MemoryGraph:
         # extracted_entities = extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data)
         # logging.info(f"Extracted entities: {extracted_entities}")
 
-        tasks = [update_mem(self.llm, existing_entities, e) for e in entities_from_query]
+        tasks = [update_mem(self.llm, existing_srds, srd_from_input) for srd_from_input in srds_from_input]
         results = await asyncio.gather(*tasks)
 
         to_be_added = []
@@ -89,15 +89,12 @@ class MemoryGraph:
         ) for item in to_be_updated]
         await asyncio.gather(*tasks)
 
-        returned_entities = []
         async def add_items(item):
             source = item["source"].lower().replace(" ", "_")
             source_type = item["source_type"].lower().replace(" ", "_")
             relation = item["relationship"].lower().replace(" ", "_")
             destination = item["destination"].lower().replace(" ", "_")
             destination_type = item["destination_type"].lower().replace(" ", "_")
-
-            returned_entities.append({"source": source, "relationship": relation, "target": destination})
 
             # Create embeddings
             source_embedding = self.embedding_model.embed(source)
@@ -130,63 +127,7 @@ class MemoryGraph:
         tasks = [add_items(item) for item in to_be_added]
         await asyncio.gather(*tasks)
 
-
-        # to_be_added = []
-        # to_be_updated = []
-
-        # for e in extracted_entities:
-        #     a, u = update_mem(self.llm, search_output, e)
-        #     to_be_added.extend(a)
-        #     to_be_updated.extend(u)
-
-        # for item in to_be_updated:
-        #     self._update_relationship(
-        #         item["source"],
-        #         item["destination"],
-        #         item["relationship"],
-        #         filters,
-        #     )
-
-        # returned_entities = []
-        # for item in to_be_added:
-        #     source = item["source"].lower().replace(" ", "_")
-        #     source_type = item["source_type"].lower().replace(" ", "_")
-        #     relation = item["relationship"].lower().replace(" ", "_")
-        #     destination = item["destination"].lower().replace(" ", "_")
-        #     destination_type = item["destination_type"].lower().replace(" ", "_")
-        #
-        #     returned_entities.append({"source": source, "relationship": relation, "target": destination})
-        #
-        #     # Create embeddings
-        #     source_embedding = self.embedding_model.embed(source)
-        #     dest_embedding = self.embedding_model.embed(destination)
-        #
-        #     # Updated Cypher query to include node types and embeddings
-        #     cypher = f"""
-        #     MERGE (n:{source_type} {{name: $source_name, {NAMESPACE}: ${NAMESPACE}}})
-        #     ON CREATE SET n.created = timestamp(), n.embedding = $source_embedding
-        #     ON MATCH SET n.embedding = $source_embedding
-        #     MERGE (m:{destination_type} {{name: $dest_name, {NAMESPACE}: ${NAMESPACE}}})
-        #     ON CREATE SET m.created = timestamp(), m.embedding = $dest_embedding
-        #     ON MATCH SET m.embedding = $dest_embedding
-        #     MERGE (n)-[rel:{relation}]->(m)
-        #     ON CREATE SET rel.created = timestamp()
-        #     RETURN n, rel, m
-        #     """
-        #
-        #     params = {
-        #         "source_name": source,
-        #         "dest_name": destination,
-        #         "source_embedding": source_embedding,
-        #         "dest_embedding": dest_embedding,
-        #         f"{NAMESPACE}": filters[f"{NAMESPACE}"],
-        #     }
-        #
-        #     _ = self.graph.query(cypher, params=params)
-
-        logging.info(f"{len(to_be_added)=} {len(to_be_updated)=}")
-
-        return returned_entities
+        return {"to_be_added": to_be_added, "to_be_updated": to_be_updated}
 
     async def _search(self, query, metadata, filters, limit=100):
         nodes_from_query = extract_nodes_for_search(metadata[f"{USER_NAME}"], self.llm, query)
@@ -239,7 +180,7 @@ class MemoryGraph:
                 if d not in nodes_from_query_set:
                     node_list_hop1.add(d)
 
-        logging.info(f"{existing_srds=}")
+        logging.info(f"{json.dumps(existing_srds)=}")
 
         logging.info(f"{node_list_hop1=}")
         for node in node_list_hop1:
@@ -253,7 +194,7 @@ class MemoryGraph:
             srds = self.graph.query(cypher_query, params=params)
             existing_srds.extend(srds)
 
-        logging.info(f"{existing_srds=}")
+        logging.info(f"{json.dumps(existing_srds)=}")
         return existing_srds
 
     async def search(self, query, metadata, filters, limit=100):
@@ -303,7 +244,7 @@ class MemoryGraph:
 
         return search_results
 
-    async def delete_all(self, filters):
+    def delete_all(self, filters):
         cypher = f"""
         MATCH (n {{{NAMESPACE}: ${NAMESPACE}}})
         DETACH DELETE n

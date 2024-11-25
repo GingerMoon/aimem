@@ -1,7 +1,8 @@
 import json
 import logging
+import traceback
 from typing import Callable, Any
-from fastapi.responses import Response
+from starlette.responses import JSONResponse
 
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -10,14 +11,6 @@ from starlette.concurrency import iterate_in_threadpool
 from infra.logutil.context import *
 
 logger = logging.getLogger('log_util')
-
-class CustomResponse(Response):
-    media_type = "application/json"
-
-    def __init__(self, content: Any, status_code: int):
-        super().__init__(content)
-        self.body = json.dumps({"data": content}).encode("utf-8")
-        self.status_code = status_code
 
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -28,8 +21,13 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         request._body = body
         body_str = body.decode("utf-8")
         logging.info(f"Request: {request.method} {request.url} \n Body: {json.dumps(body_str)}")
-        response = await call_next(request)
-        response_body = [chunk async for chunk in response.body_iterator]
-        logging.info(f"Response: {response.status_code} \n Body: {response_body[0].decode()}")
-        response.body_iterator = iterate_in_threadpool(iter(response_body))
-        return response
+        try:
+            response = await call_next(request)
+            response_body = [chunk async for chunk in response.body_iterator]
+            logging.info(f"Response: {response.status_code} \n Body: {response_body[0].decode()}")
+            response.body_iterator = iterate_in_threadpool(iter(response_body))
+            return response
+        except Exception as e:
+            logging.error(f"An error occurred: {str(e)}")
+            logging.error(f"Traceback: {traceback.format_exc()}")
+            return JSONResponse(status_code=500, content={"error": "An error occurred"})

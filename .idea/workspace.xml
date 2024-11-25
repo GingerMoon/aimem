@@ -7,20 +7,10 @@
     <list default="true" id="dea9414a-9f59-4741-b609-45576be5059b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aimem.log.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/aimem.log.jsonl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/log.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/log.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/llms/aliyun.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/llms/aliyun.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/vector_stores/qdrant/qdrant.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/vector_stores/qdrant/qdrant.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mem_tools/graph/extract_entities_for_add_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/extract_entities_for_add_mem.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infra/logutil/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/logutil/middleware.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mem_tools/graph/update_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/update_mem.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mem_tools/vector/abstract_out_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/vector/abstract_out_mem.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mem_tools/vector/update_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/vector/update_mem.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/memory/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/memory/consts.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/consts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem_graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/memory/mem_vec.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem_vec.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +92,7 @@
       <recent name="C:\Users\wangxiang1\workspace\aimem\mem_tools\vector" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.app">
+  <component name="RunManager" selected="Python.update_mem">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="aimem" />
       <option name="ENV_FILES" value="" />
@@ -119,30 +109,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="extract_nodes_for_search" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="aimem" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
-        <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mem_tools/graph" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -223,20 +189,44 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="update_mem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="aimem" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="OPENAI_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+        <env name="DASHSCOPE_API_KEY" value="sk-8c7a0aa0f93d4ee3b34fe3b4de427fb9" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mem_tools/graph" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mem_tools/graph/update_mem.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Python.update_mem" />
       <item itemvalue="Python.app" />
-      <item itemvalue="Python.extract_nodes_for_search" />
       <item itemvalue="Python.mem" />
       <item itemvalue="Python.mem_vec" />
       <item itemvalue="Python.mem_graph" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.update_mem" />
         <item itemvalue="Python.app" />
         <item itemvalue="Python.mem_vec" />
         <item itemvalue="Python.mem_graph" />
         <item itemvalue="Python.mem" />
-        <item itemvalue="Python.extract_nodes_for_search" />
       </list>
     </recent_temporary>
   </component>
@@ -257,5 +247,31 @@
       <updated>1731979704705</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/memory/mem.py</url>
+          <line>202</line>
+          <option name="timeStamp" value="179" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app/main.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="181" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/AppData/Local/pypoetry/Cache/virtualenvs/aimem-QL1W1oV2-py3.12/Lib/site-packages/fastapi/encoders.py</url>
+          <line>323</line>
+          <option name="timeStamp" value="184" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/AppData/Local/pypoetry/Cache/virtualenvs/aimem-QL1W1oV2-py3.12/Lib/site-packages/fastapi/encoders.py</url>
+          <line>331</line>
+          <option name="timeStamp" value="185" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
