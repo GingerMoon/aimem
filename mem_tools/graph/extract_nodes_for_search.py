@@ -37,7 +37,6 @@ def extract_nodes_for_search(user_name: str, llm: LLMBase, query: str):
         ],
         tools=tools,
     )
-    logging.debug(f"{extracted_entities=}")
 
     # TODO also take relation into account
     node_list = []

@@ -1,140 +1,318 @@
 {
   "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:29:393",
-  "loggerName": "httpx",
-  "filename": "_client.py",
-  "funcName": "_send_single_request",
-  "lineno": 1038,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
+  "timestamp": "2024-11-25T16:56:49:317",
+  "filename": "middleware.py",
+  "funcName": "dispatch",
+  "lineno": 30,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "message": "Request: POST http://127.0.0.1:8080/memory/add \n Body: \"{\\r\\n    \\\"messages\\\": [\\r\\n        {\\r\\n            \\\"role\\\": \\\"user\\\",\\r\\n            \\\"content\\\": \\\"Hancy doesn't like football. Shaque Network Inc. is in BaoShan District Shanghai China.\\\"\\r\\n        }\\r\\n    ],\\r\\n    \\\"user_name\\\": \\\"wx\\\",\\r\\n    \\\"namespace\\\": \\\"n1\\\"\\r\\n}\""
 }
 {
   "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:29:419",
-  "loggerName": "httpx",
-  "filename": "_client.py",
-  "funcName": "_send_single_request",
-  "lineno": 1038,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "HTTP Request: POST http://localhost:6333/collections/test/points/search \"HTTP/1.1 200 OK\""
+  "timestamp": "2024-11-25T16:56:52:650",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 37,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "new_facts=[\"Hancy doesn't like football\", 'Shaque Network Inc. is in BaoShan District Shanghai China']"
 }
 {
   "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:32:362",
-  "loggerName": "root",
-  "filename": "extract_nodes_for_search.py",
-  "funcName": "extract_nodes_for_search",
-  "lineno": 40,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "extracted_entities={'content': '', 'tool_calls': [{'name': 'search_', 'arguments': {'nodes': ['wx'], 'relations': ['work in']}}]}"
+  "timestamp": "2024-11-25T16:56:54:049",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 50,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "existing memories about new_fact=\"Hancy doesn't like football\" existing_memories=[ScoredPoint(id='a4e5ad51-cef0-4cb3-98f6-7572bfe86b24', version=9, score=0.874858, payload={'user_name': 'wx', 'data': 'Hancy likes playing football', 'hash': '81185c556a047be5da51b3938c0e2079', 'created_at': '2024-11-25T00:55:16.850052-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None), ScoredPoint(id='32f8a5fa-d5bb-4b58-b8f9-0160524f08de', version=8, score=0.6596703, payload={'user_name': 'wx', 'data': 'Has one daughter named Hancy', 'hash': '8b95f7a9586eb484e62bd6fac5973e4c', 'created_at': '2024-11-25T00:55:16.843087-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None), ScoredPoint(id='2af429a6-2931-40c9-9710-07447a2ff3bd', version=10, score=0.31482512, payload={'user_name': 'wx', 'data': 'Works for Shaque Network Inc.', 'hash': '39ffcc424525e2f75abb899a35e15b05', 'created_at': '2024-11-25T00:55:16.856982-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None), ScoredPoint(id='b83c41fd-19e7-4c46-bb95-dbe6ab22c9fb', version=11, score=0.2692908, payload={'user_name': 'wx', 'data': 'Shaque Network Inc. is in SongJiang District, Shanghai, China', 'hash': '0cd8e643443ea2c4bb99b32d102cb525', 'created_at': '2024-11-25T00:55:16.863707-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None)]"
 }
 {
   "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:32:362",
-  "loggerName": "root",
+  "timestamp": "2024-11-25T16:56:54:730",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 50,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "existing memories about new_fact='Shaque Network Inc. is in BaoShan District Shanghai China' existing_memories=[ScoredPoint(id='b83c41fd-19e7-4c46-bb95-dbe6ab22c9fb', version=11, score=0.93778193, payload={'user_name': 'wx', 'data': 'Shaque Network Inc. is in SongJiang District, Shanghai, China', 'hash': '0cd8e643443ea2c4bb99b32d102cb525', 'created_at': '2024-11-25T00:55:16.863707-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None), ScoredPoint(id='2af429a6-2931-40c9-9710-07447a2ff3bd', version=10, score=0.72427976, payload={'user_name': 'wx', 'data': 'Works for Shaque Network Inc.', 'hash': '39ffcc424525e2f75abb899a35e15b05', 'created_at': '2024-11-25T00:55:16.856982-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None), ScoredPoint(id='32f8a5fa-d5bb-4b58-b8f9-0160524f08de', version=8, score=0.37195855, payload={'user_name': 'wx', 'data': 'Has one daughter named Hancy', 'hash': '8b95f7a9586eb484e62bd6fac5973e4c', 'created_at': '2024-11-25T00:55:16.843087-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None), ScoredPoint(id='a4e5ad51-cef0-4cb3-98f6-7572bfe86b24', version=9, score=0.33278784, payload={'user_name': 'wx', 'data': 'Hancy likes playing football', 'hash': '81185c556a047be5da51b3938c0e2079', 'created_at': '2024-11-25T00:55:16.850052-08:00', 'namespace': 'n1'}, vector=None, shard_key=None, order_value=None)]"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:05:777",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 69,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "planned actions on:new_fact=\"Hancy doesn't like football\"\nnew_fact_planed_actions={'memory': [{'id': '0', 'text': \"Hancy doesn't like football\", 'type': 'UPDATE', 'value_pre': 'Hancy likes playing football'}, {'id': '1', 'text': 'Has one daughter named Hancy', 'type': 'NONE'}, {'id': '2', 'text': 'Works for Shaque Network Inc.', 'type': 'NONE'}, {'id': '3', 'text': 'Shaque Network Inc. is in SongJiang District, Shanghai, China', 'type': 'NONE'}]}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:647",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 69,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "planned actions on:new_fact='Shaque Network Inc. is in BaoShan District Shanghai China'\nnew_fact_planed_actions={'memory': [{'id': '0', 'text': 'Shaque Network Inc. is in BaoShan District, Shanghai, China', 'type': 'UPDATE', 'value_pre': 'Shaque Network Inc. is in SongJiang District, Shanghai, China'}, {'id': '1', 'text': 'Works for Shaque Network Inc.', 'type': 'NONE'}, {'id': '2', 'text': 'Has one daughter named Hancy', 'type': 'NONE'}, {'id': '3', 'text': 'Hancy likes playing football', 'type': 'NONE'}]}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:647",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '0', 'text': \"Hancy doesn't like football\", 'type': 'UPDATE', 'value_pre': 'Hancy likes playing football'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:647",
+  "filename": "mem_vec.py",
+  "funcName": "_update_memory",
+  "lineno": 297,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "Updating memory with data=\"Hancy doesn't like football\""
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:692",
+  "filename": "mem_vec.py",
+  "funcName": "_update_memory",
+  "lineno": 323,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "Updating memory with memory_id='a4e5ad51-cef0-4cb3-98f6-7572bfe86b24' with data=\"Hancy doesn't like football\". prev_value='Hancy likes playing football'"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:692",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '1', 'text': 'Has one daughter named Hancy', 'type': 'NONE'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:692",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '2', 'text': 'Works for Shaque Network Inc.', 'type': 'NONE'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:692",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '3', 'text': 'Shaque Network Inc. is in SongJiang District, Shanghai, China', 'type': 'NONE'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:692",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '0', 'text': 'Shaque Network Inc. is in BaoShan District, Shanghai, China', 'type': 'UPDATE', 'value_pre': 'Shaque Network Inc. is in SongJiang District, Shanghai, China'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:14:692",
+  "filename": "mem_vec.py",
+  "funcName": "_update_memory",
+  "lineno": 297,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "Updating memory with data='Shaque Network Inc. is in BaoShan District, Shanghai, China'"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:16:170",
+  "filename": "mem_vec.py",
+  "funcName": "_update_memory",
+  "lineno": 323,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "Updating memory with memory_id='b83c41fd-19e7-4c46-bb95-dbe6ab22c9fb' with data='Shaque Network Inc. is in BaoShan District, Shanghai, China'. prev_value='Shaque Network Inc. is in SongJiang District, Shanghai, China'"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:16:170",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '1', 'text': 'Works for Shaque Network Inc.', 'type': 'NONE'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:16:171",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '2', 'text': 'Has one daughter named Hancy', 'type': 'NONE'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:16:171",
+  "filename": "mem_vec.py",
+  "funcName": "add",
+  "lineno": 76,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "vec_mem_add",
+  "message": "handling action={'id': '3', 'text': 'Hancy likes playing football', 'type': 'NONE'}"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:20:105",
   "filename": "mem_graph.py",
   "funcName": "_search",
-  "lineno": 122,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "Node list for search query : ['wx']"
+  "lineno": 193,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "nodes_from_query=['shanghai', 'shaque_network_inc.', 'football', 'baoshan_district', 'hancy', 'china']"
 }
 {
   "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:35:134",
-  "loggerName": "httpx",
-  "filename": "_client.py",
-  "funcName": "_send_single_request",
-  "lineno": 1038,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
-}
-{
-  "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:35:140",
-  "loggerName": "root",
+  "timestamp": "2024-11-25T16:57:24:079",
   "filename": "mem_graph.py",
   "funcName": "_search",
-  "lineno": 171,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "node_list_hop1={'shaque_network_inc.', 'hancy'}"
+  "lineno": 242,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "existing_srds=[{'source': 'shaque_network_inc.', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'relation': 'located_in', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:12', 'destination': 'songjiang_district,_shanghai,_china', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:9', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'works_for', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:1', 'destination': 'shaque_network_inc.', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'similarity': 1.0}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 0.8095}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'has_child', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'destination': 'hancy', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'similarity': 1.0}]"
 }
 {
   "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:35:727",
-  "loggerName": "httpx",
-  "filename": "_client.py",
-  "funcName": "_send_single_request",
-  "lineno": 1038,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
-}
-{
-  "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:37:457",
-  "loggerName": "httpx",
-  "filename": "_client.py",
-  "funcName": "_send_single_request",
-  "lineno": 1038,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings \"HTTP/1.1 200 OK\""
-}
-{
-  "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:37:463",
-  "loggerName": "root",
+  "timestamp": "2024-11-25T16:57:24:080",
   "filename": "mem_graph.py",
-  "funcName": "search",
-  "lineno": 226,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "search_results=[{'source': 'hancy', 'relationship': 'dislikes', 'target': 'playing_football'}, {'source': 'shaque_network_inc.', 'relationship': 'located_in', 'target': 'songjiang_district,_shanghai,_china'}, {'source': 'wx', 'relationship': 'has_child', 'target': 'hancy'}, {'source': 'wx', 'relationship': 'works_for', 'target': 'shaque_network_inc.'}]"
+  "funcName": "_search",
+  "lineno": 244,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "node_list_hop1={'playing_football', 'wx', 'songjiang_district,_shanghai,_china'}"
 }
 {
   "level": "INFO",
-  "processName": "MainProcess",
-  "processID": 63828,
-  "threadName": "MainThread",
-  "threadID": 33420,
-  "timestamp": "2024-11-22T17:23:37:463",
-  "loggerName": "root",
-  "filename": "mem.py",
-  "funcName": "chat",
-  "lineno": 255,
-  "correlation_id": "e5c0c294d5ca45bd9bbdc73567def457",
-  "message": "search_results: {'results': [{'id': '14fccda8-129f-4666-ace4-431046115a23', 'memory': 'Works for Shaque Network Inc.', 'hash': '39ffcc424525e2f75abb899a35e15b05', 'metadata': {'user_name': 'wx', 'namespace': 'n1'}, 'score': 0.4722924, 'created_at': '2024-11-21T23:16:46.761079-08:00', 'updated_at': None, 'namespace': 'n1'}], 'relations': [{'source': 'hancy', 'relationship': 'dislikes', 'target': 'playing_football'}, {'source': 'shaque_network_inc.', 'relationship': 'located_in', 'target': 'songjiang_district,_shanghai,_china'}, {'source': 'wx', 'relationship': 'has_child', 'target': 'hancy'}, {'source': 'wx', 'relationship': 'works_for', 'target': 'shaque_network_inc.'}]}"
+  "timestamp": "2024-11-25T16:57:25:689",
+  "filename": "mem_graph.py",
+  "funcName": "_search",
+  "lineno": 256,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "existing_srds=[{'source': 'shaque_network_inc.', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'relation': 'located_in', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:12', 'destination': 'songjiang_district,_shanghai,_china', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:9', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'works_for', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:1', 'destination': 'shaque_network_inc.', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'similarity': 1.0}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 0.8095}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'has_child', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'destination': 'hancy', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'similarity': 1.0}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'works_for', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:1', 'destination': 'shaque_network_inc.', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'has_child', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'destination': 'hancy', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'similarity': 1.0}, {'source': 'shaque_network_inc.', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'relation': 'located_in', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:12', 'destination': 'songjiang_district,_shanghai,_china', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:9', 'similarity': 1.0}]"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:32:753",
+  "filename": "mem_graph.py",
+  "funcName": "add",
+  "lineno": 63,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "existing_entities=[{'source': 'shaque_network_inc.', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'relation': 'located_in', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:12', 'destination': 'songjiang_district,_shanghai,_china', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:9', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'works_for', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:1', 'destination': 'shaque_network_inc.', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'similarity': 1.0}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 0.8095}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'has_child', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'destination': 'hancy', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'similarity': 1.0}, {'source': 'hancy', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'relation': 'likes', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:15', 'destination': 'playing_football', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'works_for', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:1', 'destination': 'shaque_network_inc.', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'similarity': 1.0}, {'source': 'wx', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:4', 'relation': 'has_child', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:0', 'destination': 'hancy', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:7', 'similarity': 1.0}, {'source': 'shaque_network_inc.', 'source_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:8', 'relation': 'located_in', 'relation_id': '5:fb827e2b-6dda-4c78-b677-77da327248c2:12', 'destination': 'songjiang_district,_shanghai,_china', 'destination_id': '4:fb827e2b-6dda-4c78-b677-77da327248c2:9', 'similarity': 1.0}]"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:32:753",
+  "filename": "mem_graph.py",
+  "funcName": "add",
+  "lineno": 64,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "entities_from_query=[{'source_node': 'wx', 'source_type': 'person', 'relation': 'DISLIKES', 'destination_node': 'football', 'destination_type': 'sport'}, {'source_node': 'Shaque Network Inc.', 'source_type': 'company', 'relation': 'LOCATED_IN', 'destination_node': 'BaoShan District, Shanghai, China', 'destination_type': 'location'}]"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:304",
+  "filename": "mem_graph.py",
+  "funcName": "add",
+  "lineno": 81,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "to_be_added=[]"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:304",
+  "filename": "mem_graph.py",
+  "funcName": "add",
+  "lineno": 82,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "to_be_updated=[{'source': 'wx', 'destination': 'playing_football', 'relationship': 'DISLIKES'}, {'source': 'shaque_network_inc.', 'destination': 'songjiang_district,_shanghai,_china', 'relationship': 'located_in'}]"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:304",
+  "filename": "mem_graph.py",
+  "funcName": "_update_relationship",
+  "lineno": 362,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "Updating relationship: wx -DISLIKES-> playing_football"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:312",
+  "filename": "result.py",
+  "funcName": "_handle_warnings",
+  "lineno": 332,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Statement.CartesianProduct} {category: PERFORMANCE} {title: This query builds a cartesian product between disconnected patterns.} {description: If a part of a query contains multiple disconnected patterns, this will build a cartesian product between all those parts. This may produce a large amount of data and slow down query processing. While occasionally intended, it may often be possible to reformulate the query that avoids the use of this cross product, perhaps by adding a relationship between the different parts or by using OPTIONAL MATCH (identifier is: (n2))} {position: line: 2, column: 9, offset: 9} for query: '\\n        MATCH (n1 {name: $source, namespace: $namespace}), (n2 {name: $target, namespace: $namespace})\\n        CREATE (n1)-[r:dislikes]->(n2)\\n        RETURN n1, r, n2\\n        '"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:322",
+  "filename": "mem_graph.py",
+  "funcName": "_update_relationship",
+  "lineno": 362,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "Updating relationship: shaque_network_inc. -located_in-> songjiang_district,_shanghai,_china"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:343",
+  "filename": "result.py",
+  "funcName": "_handle_warnings",
+  "lineno": 332,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Statement.CartesianProduct} {category: PERFORMANCE} {title: This query builds a cartesian product between disconnected patterns.} {description: If a part of a query contains multiple disconnected patterns, this will build a cartesian product between all those parts. This may produce a large amount of data and slow down query processing. While occasionally intended, it may often be possible to reformulate the query that avoids the use of this cross product, perhaps by adding a relationship between the different parts or by using OPTIONAL MATCH (identifier is: (n2))} {position: line: 2, column: 9, offset: 9} for query: '\\n        MATCH (n1 {name: $source, namespace: $namespace}), (n2 {name: $target, namespace: $namespace})\\n        CREATE (n1)-[r:located_in]->(n2)\\n        RETURN n1, r, n2\\n        '"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:348",
+  "filename": "mem_graph.py",
+  "funcName": "add",
+  "lineno": 187,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "flow_name": "graph_mem_add",
+  "message": "len(to_be_added)=0 len(to_be_updated)=2"
+}
+{
+  "level": "INFO",
+  "timestamp": "2024-11-25T16:57:41:349",
+  "filename": "middleware.py",
+  "funcName": "dispatch",
+  "lineno": 33,
+  "correlation_id": "0d742893561f4e179a6cbf2ce6cac427",
+  "message": "Response: 200 \n Body: {\"vector_memory\":[{\"id\":\"a4e5ad51-cef0-4cb3-98f6-7572bfe86b24\",\"memory\":\"Hancy doesn't like football\",\"type\":\"UPDATE\",\"value_pre\":\"Hancy likes playing football\"},{\"id\":\"b83c41fd-19e7-4c46-bb95-dbe6ab22c9fb\",\"memory\":\"Shaque Network Inc. is in BaoShan District, Shanghai, China\",\"type\":\"UPDATE\",\"value_pre\":\"Shaque Network Inc. is in SongJiang District, Shanghai, China\"}],\"graph_memory\":[]}"
 }

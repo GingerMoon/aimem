@@ -12,16 +12,17 @@ class JsonFormatter(logging.Formatter):
     """
     def __init__(self, fmt_dict: dict = None, time_format: str = "%Y-%m-%dT%H:%M:%S", msec_format: str = "%s.%03dZ"):
         self.fmt_dict = fmt_dict if fmt_dict is not None else {"level": "levelname",
-                                                               "processName": "processName",
-                                                               "processID": "process",
-                                                               "threadName": "threadName",
-                                                               "threadID": "thread",
+                                                               # "processName": "processName",
+                                                               # "processID": "process",
+                                                               # "threadName": "threadName",
+                                                               # "threadID": "thread",
                                                                "timestamp": "asctime",
-                                                               "loggerName": "name",
+                                                               # "loggerName": "name",
                                                                "filename": "filename",
                                                                "funcName": "funcName",
                                                                "lineno": "lineno",
                                                                "correlation_id": "correlation_id",
+                                                               "flow_name": "flow_name",
                                                                "message": "message",
                                                                }
         time_format = "%Y-%m-%dT%H:%M:%S"
@@ -43,7 +44,11 @@ class JsonFormatter(logging.Formatter):
         Overwritten to return a dictionary of the relevant LogRecord attributes instead of a string.
         KeyError is raised if an unknown attribute is provided in the fmt_dict.
         """
-        return {fmt_key: record.__dict__[fmt_val] for fmt_key, fmt_val in self.fmt_dict.items()}
+        result = {}
+        for fmt_key, fmt_val in self.fmt_dict.items():
+            if fmt_val in record.__dict__:
+                result[fmt_key] = record.__dict__[fmt_val]
+        return result
 
     def format(self, record) -> str:
         """
@@ -78,7 +83,8 @@ def configure_logging() -> None:
             'disable_existing_loggers': False,
             'filters': {  # correlation ID filter must be added here to make the %(correlation_id)s formatter work
                 'correlation_id': {
-                    '()': 'asgi_correlation_id.CorrelationIdFilter',
+                    # '()': 'asgi_correlation_id.CorrelationIdFilter',
+                    '()': 'infra.logutil.filter.CtxTagsFilter',
                     'uuid_length': 32,
                     'default_value': '-',
                 },
@@ -119,7 +125,7 @@ def configure_logging() -> None:
             #     'app': {'handlers': ['file'], 'level': 'DEBUG', 'propagate': True},
             #     # third-party package loggers
             #     'databases': {'handlers': ['console'], 'level': 'WARNING'},
-            #     'httpx': {'handlers': ['console'], 'level': 'INFO'},
+                'httpx': {'handlers': ['console'], 'level': 'WARN'},
             #     'asgi_correlation_id': {'handlers': ['console'], 'level': 'WARNING'},
             },
             'root': {

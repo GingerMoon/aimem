@@ -10,16 +10,17 @@ from app.dto.chat import ChatPayload
 from app.dto.mem import AddPayload
 from log import configure_logging
 from mem_init import mem
+from infra.logutil.middleware import *
 
 
 app = FastAPI(on_startup=[configure_logging])
-app.add_middleware(asgi_correlation_id.CorrelationIdMiddleware)
+app.add_middleware(LoggingMiddleware)
 router = APIRouter()
 
 
 @router.post("/memory/add")
 async def add_memory(payload: AddPayload):
-    return mem.add(payload.messages, payload.user_name, payload.namespace, payload.metadata, payload.filters)
+    return await mem.add(payload.messages, payload.user_name, payload.namespace, payload.metadata, payload.filters)
 
 @router.delete("/memory/{namespace}")
 async def delete_memory(namespace: str):

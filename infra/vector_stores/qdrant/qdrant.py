@@ -96,7 +96,7 @@ class Qdrant(VectorStoreBase):
             payloads (list, optional): List of payloads corresponding to vectors. Defaults to None.
             ids (list, optional): List of IDs corresponding to vectors. Defaults to None.
         """
-        logging.info(f"Inserting {len(vectors)} vectors into collection {self.collection_name}")
+        logging.debug(f"Inserting {len(vectors)} vectors into collection {self.collection_name}")
         points = [
             PointStruct(
                 id=idx if ids is None else ids[idx],

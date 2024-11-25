@@ -33,7 +33,6 @@ async def extract_entities_for_add_mem(user_name: str, llm: LLMBase, data: str) 
         ],
         tools=tools,
     )
-    logging.debug(extracted_entities)
 
     if extracted_entities[TOOL_CALLS]:
         extracted_entities = extracted_entities[TOOL_CALLS][0][ARGUMENTS][ENTITIES]

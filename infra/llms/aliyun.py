@@ -92,6 +92,7 @@ class DashscopeLlm(LLMBase):
             params["tool_choice"] = tool_choice
 
         response = dashscope.Generation.call(**params)
+        logging.debug(f"{params=}\n{response=}")
         return self._parse_response(response, tools)
 
 

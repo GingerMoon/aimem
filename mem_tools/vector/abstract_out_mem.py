@@ -22,7 +22,6 @@ def abstract_out_facts(llm: LLMBase, content: str):
         ],
         response_format={"type": "json_object"},
     )
-    logging.info(response)
 
     try:
         new_retrieved_facts = json.loads(response)["facts"]

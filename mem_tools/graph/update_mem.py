@@ -19,7 +19,6 @@ async def update_mem(llm: LLMBase, existing_memories, new_memories):
         ],
         tools=tools,
     )
-    logging.info(memory_updates)
 
     to_be_added = []
     to_be_updated = []

@@ -20,13 +20,11 @@ def llm_plan_update_mem(llm: LLMBase, existing_memories, new_memories):
             CONTENT: prompt,
         },
     ]
-    logging.info(f"messages:\n{messages}")
 
     resp = llm.generate_response(
         messages=messages,
         response_format={"type": "json_object"},
     )
-    logging.info(f"new_memories_with_actions:\n{resp}")
 
     resp = strip_markdown_json_flag(resp)
     new_memories_with_actions = json.loads(resp)

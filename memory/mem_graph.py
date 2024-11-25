@@ -3,6 +3,7 @@ import json
 import logging
 import os
 
+from infra.logutil.context import *
 from memory.config import MemoryConfig
 
 try:
@@ -52,14 +53,15 @@ class MemoryGraph:
             metadata (dict): A dictionary containing metadata, such as user_name=xiang.
             filters (dict): A dictionary containing filters such as namespace=n1.
         """
+        extend_log_ctx_tags({LOG_FLOWNAME: LOG_FLOWNAME_GRAPH_MEM_ADD})
 
         data = "\n".join([msg["content"] for msg in messages if "content" in msg and msg["role"] != "system"])
 
         search_task = asyncio.create_task(self._search(data, metadata, filters))
         extract_entities_task = asyncio.create_task(extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data))
-        search_output, extracted_entities = await asyncio.gather(search_task, extract_entities_task)
-        logging.info(f"{search_output=}")
-        logging.info(f"{extracted_entities=}")
+        existing_entities, entities_from_query = await asyncio.gather(search_task, extract_entities_task)
+        logging.info(f"{existing_entities=}")
+        logging.info(f"{entities_from_query=}")
 
         # retrieve the search results
         # search_output = self._search(data, metadata, filters)
@@ -67,7 +69,7 @@ class MemoryGraph:
         # extracted_entities = extract_entities_for_add_mem(metadata[USER_NAME], self.llm, data)
         # logging.info(f"Extracted entities: {extracted_entities}")
 
-        tasks = [update_mem(self.llm, search_output, e) for e in extracted_entities]
+        tasks = [update_mem(self.llm, existing_entities, e) for e in entities_from_query]
         results = await asyncio.gather(*tasks)
 
         to_be_added = []
@@ -182,16 +184,16 @@ class MemoryGraph:
         #
         #     _ = self.graph.query(cypher, params=params)
 
-        logging.info(f"Added {len(to_be_added)} new memories to the graph")
+        logging.info(f"{len(to_be_added)=} {len(to_be_updated)=}")
 
         return returned_entities
 
     async def _search(self, query, metadata, filters, limit=100):
-        node_list = extract_nodes_for_search(metadata[f"{USER_NAME}"], self.llm, query)
-        logging.info(f"node list returned by search : {node_list}")
-        node_set = set(node_list)
+        nodes_from_query = extract_nodes_for_search(metadata[f"{USER_NAME}"], self.llm, query)
+        logging.info(f"{nodes_from_query=}")
+        nodes_from_query_set = set(nodes_from_query)
 
-        result_relations = []
+        existing_srds = []
         node_list_hop1 = set()
 
         cypher_query = f"""
@@ -218,7 +220,7 @@ class MemoryGraph:
             LIMIT $limit
             """
 
-        for node in node_list:
+        for node in nodes_from_query:
             n_embedding = self.embedding_model.embed(node)
             params = {
                 "n_embedding": n_embedding,
@@ -228,16 +230,16 @@ class MemoryGraph:
             }
             # srd : source_relation_destination
             srds = self.graph.query(cypher_query, params=params)
-            result_relations.extend(srds)
+            existing_srds.extend(srds)
             for srd in srds:
                 s = srd["source"]
                 d = srd["destination"]
-                if s not in node_set:
+                if s not in nodes_from_query_set:
                     node_list_hop1.add(s)
-                if d not in node_set:
+                if d not in nodes_from_query_set:
                     node_list_hop1.add(d)
 
-        logging.info(f"{result_relations=}")
+        logging.info(f"{existing_srds=}")
 
         logging.info(f"{node_list_hop1=}")
         for node in node_list_hop1:
@@ -249,10 +251,10 @@ class MemoryGraph:
                 "limit": limit,
             }
             srds = self.graph.query(cypher_query, params=params)
-            result_relations.extend(srds)
+            existing_srds.extend(srds)
 
-        logging.info(f"{result_relations=}")
-        return result_relations
+        logging.info(f"{existing_srds=}")
+        return existing_srds
 
     async def search(self, query, metadata, filters, limit=100):
         """
@@ -269,6 +271,8 @@ class MemoryGraph:
                 - "contexts": List of search results from the base data store.
                 - "entities": List of related graph data based on the query.
         """
+
+        extend_log_ctx_tags({LOG_FLOWNAME: LOG_FLOWNAME_GRAPH_MEM_SEARCH})
 
         search_output = await self._search(query, metadata, filters, limit)
 

@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import uuid
 from datetime import datetime
@@ -8,6 +9,7 @@ from memory.config import MemoryConfig
 from infra.embeddings.factory import EmbedderFactory
 from infra.utils.llm import parse_messages
 from infra.vector_stores.factory import VectorStoreFactory
+from infra.logutil.context import *
 from memory.mem_item import MemoryItem
 from mem_tools.vector.abstract_out_mem import abstract_out_facts
 from mem_tools.vector.update_mem import *
@@ -26,10 +28,13 @@ class MemoryVector:
         self.collection_name = self.config.vector_store.config.collection_name
 
 
-    def add(self, messages, metadata, filters):
+    async def add(self, messages, metadata, filters):
+        extend_log_ctx_tags({LOG_FLOWNAME:LOG_FLOWNAME_VEC_MEM_ADD})
+
         parsed_messages = parse_messages(messages)
 
         new_facts = abstract_out_facts(self.llm, parsed_messages)
+        logging.info(f"{new_facts=}")
 
         new_facts2existing_memories = []
         new_facts_embeddings = {}
@@ -42,7 +47,7 @@ class MemoryVector:
                 filters=filters,
             )
             simplified_existing_memories = [{"id": mem.id, "text": mem.payload["data"]} for mem in existing_memories]
-            logging.info(f"existing memories: {existing_memories}")
+            logging.info(f"existing memories about {new_fact=} {existing_memories=}")
             new_facts2existing_memories.insert(index, simplified_existing_memories)
 
         uuid_mapping = [] # elements' order is the same as new_facts elements' order.
@@ -59,16 +64,16 @@ class MemoryVector:
 
             new_fact_planed_actions = llm_plan_update_mem(self.llm, simplified_existing_memories, [new_fact])
             if(len(new_fact_planed_actions) == 0):
-                logger.error(f"update_mem_vec returns empty.")
+                logging.error(f"update_mem_vec returns empty.{new_fact=}")
             else:
-                logger.info(f"update_mem_vec:\n{new_fact_planed_actions}, ")
+                logging.info(f"planned actions on:{new_fact=}\n{new_fact_planed_actions=}")
                 planned_actions.insert(index, new_fact_planed_actions["memory"])
 
         returned_memories = []
         try:
             for index, actions in enumerate(planned_actions):
                 for action in actions:
-                    logging.info(action)
+                    logging.info(f"handling {action=}")
                     try:
                         if action[OPERATION_TYPE] == "ADD":
                             memory_id = self._create_memory(
@@ -106,7 +111,7 @@ class MemoryVector:
                                 }
                             )
                         elif action[OPERATION_TYPE] == "NONE":
-                            logging.info("NOOP for Memory.")
+                            logging.debug(f"NOOP for Memory.")
                     except Exception as e:
                         logging.error(f"Error in planned actions: {index=} {action=} {e}")
         except Exception as e:
@@ -189,6 +194,9 @@ class MemoryVector:
 
 
     async def search(self, query, filters, limit):
+
+        extend_log_ctx_tags({LOG_FLOWNAME: LOG_FLOWNAME_VEC_MEM_SEARCH})
+
         embeddings = self.embedding_model.embed(query)
         memories = self.vector_store.search(query=embeddings, limit=limit, filters=filters)
 
@@ -259,7 +267,7 @@ class MemoryVector:
         for memory in memories:
             self._delete_memory(memory.id)
 
-        logger.info(f"Deleted {len(memories)} memories")
+        logging.info(f"Deleted {len(memories)} memories")
 
         return {"message": "Memories deleted successfully!"}
 
@@ -286,7 +294,7 @@ class MemoryVector:
         return memory_id
 
     def _update_memory(self, memory_id, data, existing_embeddings, metadata=None):
-        logger.info(f"Updating memory with {data=}")
+        logging.info(f"Updating memory with {data=}")
 
         try:
             existing_memory = self.vector_store.get(vector_id=memory_id)
@@ -312,7 +320,7 @@ class MemoryVector:
             vector=embeddings,
             payload=new_metadata,
         )
-        logger.info(f"Updating memory with {memory_id=} with {data=}. {prev_value=}")
+        logging.info(f"Updating memory with {memory_id=} with {data=}. {prev_value=}")
         return memory_id
 
     def _delete_memory(self, memory_id):
@@ -326,14 +334,13 @@ class MemoryVector:
         """
         Reset the memory store.
         """
-        logger.warning("Resetting all memories")
+        logging.warning(f"Resetting all memories")
         self.vector_store.delete_col()
         self.vector_store = VectorStoreFactory.create(
             self.config.vector_store.provider, self.config.vector_store.config
         )
 
-
-if __name__ == "__main__":
+async def __test__():
     config_dict = {
         "vector_store": {
             "provider": "qdrant",
@@ -377,12 +384,15 @@ if __name__ == "__main__":
 
     content = "Hancy doesn't likes playing football. Giant Network Inc. is located in SongJiang District Shanghai China."
     messages = [{"role": "user", "content": content}]
-    memories = mem.add(messages, metadata, filters)
-    logger.info(f"{memories=}")
+    memories = await mem.add(messages, metadata, filters)
+    logging.info(f"{memories=}")
 
     for m in memories:
         stored_mem = mem.get(m["id"])
-        logger.info(f"{stored_mem=}")
+        logging.info(f"{stored_mem=}")
 
     mem.delete(memories[0]["id"])
     mem.update(memories[1]["id"], memories[0]["memory"] + "--updated.")
+
+if __name__ == "__main__":
+    asyncio.run(__test__())

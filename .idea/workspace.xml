@@ -7,20 +7,17 @@
     <list default="true" id="dea9414a-9f59-4741-b609-45576be5059b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aimem.log.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/aimem.log.jsonl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/log.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/log.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/embeddings/configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/configs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/embeddings/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/factory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/embeddings/ollama.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/ollama.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/embeddings/openai.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/embeddings/openai.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/infra/llms/aliyun.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/llms/aliyun.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/vector_stores/milvus/milvus.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/vector_stores/milvus/milvus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infra/vector_stores/pgvector/pgvector.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/vector_stores/pgvector/pgvector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/infra/vector_stores/qdrant/qdrant.py" beforeDir="false" afterPath="$PROJECT_DIR$/infra/vector_stores/qdrant/qdrant.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mem_tools/graph/extract_entities_for_add_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/extract_entities_for_add_mem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/extract_nodes_for_search.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mem_tools/graph/update_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/graph/update_mem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mem_tools/vector/abstract_out_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/vector/abstract_out_mem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mem_tools/vector/update_mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/mem_tools/vector/update_mem.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory/consts.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/consts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem_graph.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/memory/mem_vec.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory/mem_vec.py" afterDir="false" />
@@ -80,7 +77,7 @@
     "Python.main.executor": "Run",
     "Python.mem.executor": "Run",
     "Python.mem_graph.executor": "Run",
-    "Python.mem_vec.executor": "Run",
+    "Python.mem_vec.executor": "Debug",
     "Python.memory.executor": "Run",
     "Python.update_mem (1).executor": "Run",
     "Python.update_mem.executor": "Run",
@@ -88,17 +85,17 @@
     "Python.vector_memory.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/wangxiang1/workspace/aimem/app",
+    "last_opened_file_path": "C:/Users/wangxiang1/workspace/aimem/infra/logutil",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\wangxiang1\workspace\aimem\infra\logutil" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\app" />
       <recent name="C:\Users\wangxiang1\workspace\aimem" />
       <recent name="C:\Users\wangxiang1\workspace\research\aimem\memory" />
       <recent name="C:\Users\wangxiang1\workspace\aimem\infra\llms" />
-      <recent name="C:\Users\wangxiang1\workspace\aimem\mem_tools\vector" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\wangxiang1\workspace\aimem\app" />
@@ -236,10 +233,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.app" />
-        <item itemvalue="Python.mem" />
-        <item itemvalue="Python.extract_nodes_for_search" />
         <item itemvalue="Python.mem_vec" />
         <item itemvalue="Python.mem_graph" />
+        <item itemvalue="Python.mem" />
+        <item itemvalue="Python.extract_nodes_for_search" />
       </list>
     </recent_temporary>
   </component>
@@ -260,16 +257,5 @@
       <updated>1731979704705</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mem_tools/graph/update_mem.py</url>
-          <line>29</line>
-          <option name="timeStamp" value="150" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

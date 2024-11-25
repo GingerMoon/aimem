@@ -30,12 +30,13 @@ class Memory(MemoryBase):
     def from_config(cls, config_dict: Dict[str, Any]):
         try:
             config = MemoryConfig(**config_dict)
+            logging.info(f"{config}")
         except ValidationError as e:
             logging.error(f"Configuration validation error: {e}")
             raise
         return cls(config)
 
-    def add(
+    async def add(
             self,
             messages,
             user_name,
@@ -78,14 +79,18 @@ class Memory(MemoryBase):
         if isinstance(messages, str):
             messages = [{"role": "user", "content": messages}]
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            future1 = executor.submit(self.vec_mem.add, messages, metadata, filters)
-            future2 = executor.submit(self.graph.add, messages, metadata, filters)
+        vec_task = asyncio.create_task(self.vec_mem.add(messages, metadata, filters))
+        graph_task = asyncio.create_task(self.graph.add(messages, metadata, filters))
+        vector_store_result, graph_result = await asyncio.gather(vec_task, graph_task)
 
-            concurrent.futures.wait([future1, future2])
-
-            vector_store_result = future1.result()
-            graph_result = future2.result()
+        # with concurrent.futures.ThreadPoolExecutor() as executor:
+        #     future1 = executor.submit(self.vec_mem.add, messages, metadata, filters)
+        #     future2 = executor.submit(self.graph.add, messages, metadata, filters)
+        #
+        #     concurrent.futures.wait([future1, future2])
+        #
+        #     vector_store_result = future1.result()
+        #     graph_result = future2.result()
 
         return {
             "vector_memory": vector_store_result,
