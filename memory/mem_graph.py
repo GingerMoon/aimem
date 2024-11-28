@@ -1,7 +1,4 @@
 import asyncio
-import json
-import logging
-import os
 
 from infra.logutil.context import *
 from memory.config import MemoryConfig
@@ -16,11 +13,11 @@ try:
 except ImportError:
     raise ImportError("rank_bm25 is not installed. Please install it using pip install rank-bm25")
 
-from infra.llms.factory import LlmFactory
 from infra.embeddings.factory import EmbedderFactory
 from mem_tools.graph.extract_entities_for_add_mem import extract_entities_for_add_mem
 from mem_tools.graph.extract_nodes_for_search import extract_nodes_for_search
 from mem_tools.graph.update_mem import update_mem
+from mem_tools.graph.plan_mem_op import *
 from memory.consts import *
 
 
@@ -43,8 +40,101 @@ class MemoryGraph:
         self.llm = LlmFactory.create(self.llm_provider, self.config.llm.config)
         self.threshold = 0.7
 
-    # TODO store metadata in nodes/relations
+    async def _graphdb_add(self, namespace, operation):
+
+        source = operation[SOURCE_NODE].lower().replace(" ", "_")
+        source_type = operation[SOURCE_TYPE][0].lower().replace(" ", "_")
+        relation = operation[RELATION].lower().replace(" ", "_")
+        destination = operation[DESTINATION_NODE].lower().replace(" ", "_")
+        destination_type = operation[DESTINATION_TYPE][0].lower().replace(" ", "_")
+        logging.debug(f"add relationship: {source} -{relation}-> {destination}")
+
+        # Create embeddings
+        source_embedding = self.embedding_model.embed(source)
+        dest_embedding = self.embedding_model.embed(destination)
+
+        # Updated Cypher query to include node types and embeddings
+        cypher = f"""
+            MERGE (n:{source_type} {{name: $source_name, {NAMESPACE}: ${NAMESPACE}}})
+            ON CREATE SET n.created = timestamp(), n.embedding = $source_embedding
+            ON MATCH SET n.embedding = $source_embedding
+            MERGE (m:{destination_type} {{name: $dest_name, {NAMESPACE}: ${NAMESPACE}}})
+            ON CREATE SET m.created = timestamp(), m.embedding = $dest_embedding
+            ON MATCH SET m.embedding = $dest_embedding
+            MERGE (n)-[rel:{relation}]->(m)
+            ON CREATE SET rel.created = timestamp()
+            RETURN n, rel, m
+            """
+
+        params = {
+            "source_name": source,
+            "dest_name": destination,
+            "source_embedding": source_embedding,
+            "dest_embedding": dest_embedding,
+            f"{NAMESPACE}": namespace,
+        }
+
+        _ = self.graph.query(cypher, params=params)
+
+    async def _graphdb_del(self, namespace, operation):
+        source = operation[SOURCE_NODE].lower().replace(" ", "_")
+        relation = operation[RELATION].lower().replace(" ", "_")
+        destination = operation[DESTINATION_NODE].lower().replace(" ", "_")
+        logging.debug(f"delete relationship: {source} -{relation}-> {destination}")
+
+        # Delete any existing relationship between the nodes
+        delete_query = f"""
+        MATCH (s {{name: $source, {NAMESPACE}: ${NAMESPACE}}})-[r]->(d {{name: $target, {NAMESPACE}: ${NAMESPACE}}})
+        DELETE r
+        WITH s,d
+        WHERE COUNT{{(s)--()}} = 0
+        DETACH DELETE s
+        WITH d
+        WHERE COUNT{{(d)--()}} = 0
+        DETACH DELETE d
+        """
+        self.graph.query(
+            delete_query,
+            params={"source": source, "target": destination, f"{NAMESPACE}": namespace},
+        )
+
     async def add(self, messages, metadata, filters):
+        """
+        Adds data to the graph.
+
+        Args:
+            messages (array): The classic openai API chat completion messages.
+            metadata (dict): A dictionary containing metadata, such as user_name=xiang.
+            filters (dict): A dictionary containing filters such as namespace=n1.
+        """
+        user_name = metadata[f"{USER_NAME}"]
+        namespace = filters[f"{NAMESPACE}"]
+
+        extend_log_ctx_tags({LOG_FLOWNAME: LOG_FLOWNAME_GRAPH_MEM_ADD})
+
+        new_memories = "\n".join([msg["content"] for msg in messages if "content" in msg and msg["role"] != "system"])
+
+        existing_memories = await self._search(new_memories, metadata, filters)
+        logging.info(f"{json.dumps(existing_memories)=}")
+        mem_operations = plan_mem_operations(self.llm, user_name, existing_memories, new_memories)
+        logging.info(f"{json.dumps(mem_operations)=}")
+
+        add_operations = []
+        del_operations = []
+        for operation in mem_operations:
+            if operation[MEM_OPERATION] == MEM_OP_ADD:
+                add_operations.append(operation)
+            if operation[MEM_OPERATION] == MEM_OP_DELETE:
+                del_operations.append(operation)
+
+        del_tasks = [self._graphdb_del(namespace, del_op) for del_op in del_operations]
+        add_tasks = [self._graphdb_add(namespace, add_op) for add_op in add_operations]
+        tasks = del_tasks + add_tasks
+        await asyncio.gather(*tasks)
+
+        return {"add_operations": add_operations, "del_operations": del_operations}
+
+    async def add_old(self, messages, metadata, filters):
         """
         Adds data to the graph.
 
@@ -146,7 +236,7 @@ class MemoryGraph:
                 sqrt(reduce(l2 = 0.0, i IN range(0, size($n_embedding)-1) | l2 + $n_embedding[i] * $n_embedding[i]))), 4) AS similarity
             WHERE similarity >= $threshold
             MATCH (n)-[r]->(m)
-            RETURN n.name AS source, elementId(n) AS source_id, type(r) AS relation, elementId(r) AS relation_id, m.name AS destination, elementId(m) AS destination_id, similarity
+            RETURN n.name AS source, labels(n) AS source_type, elementId(n) AS source_id, type(r) AS relation, elementId(r) AS relation_id, m.name AS destination, labels(m) AS destination_type, elementId(m) AS destination_id, similarity
             UNION
             MATCH (n)
             WHERE n.embedding IS NOT NULL AND n.{NAMESPACE} = ${NAMESPACE}
@@ -156,7 +246,7 @@ class MemoryGraph:
                 sqrt(reduce(l2 = 0.0, i IN range(0, size($n_embedding)-1) | l2 + $n_embedding[i] * $n_embedding[i]))), 4) AS similarity
             WHERE similarity >= $threshold
             MATCH (m)-[r]->(n)
-            RETURN m.name AS source, elementId(m) AS source_id, type(r) AS relation, elementId(r) AS relation_id, n.name AS destination, elementId(n) AS destination_id, similarity
+            RETURN m.name AS source, labels(m) AS source_type, elementId(m) AS source_id, type(r) AS relation, elementId(r) AS relation_id, n.name AS destination, labels(n) AS destination_type, elementId(n) AS destination_id, similarity
             ORDER BY similarity DESC
             LIMIT $limit
             """
@@ -384,15 +474,80 @@ async def __test__():
 
     mem = MemoryGraph(config)
 
-    # await mem.delete_all(filters)
+    mem.delete_all(filters)
 
-    # content = "My only daughter's name is Hancy. Hancy likes playing football. I work for Giant Network Inc.."
+    # content = "My only pet's name is Meow. Hancy likes playing football. Giant Network Inc. is located in SongJiang District Shanghai China. I like playing football."
+    # messages = [{"role": "user", "content": content}]
+    # memories = await mem.add(messages, metadata, filters)
+    # logging.info(f"{memories=}")
+    #
+    # content = "My pet's name is Kitty. Hancy doesn't likes playing football. Giant Network Inc. is located in BaoShan District."
     # messages = [{"role": "user", "content": content}]
     # memories = await mem.add(messages, metadata, filters)
     # logging.info(f"{memories=}")
 
-    content = "Hancy doesn't likes playing football. Giant Network Inc. is located in SongJiang District Shanghai China."
-    messages = [{"role": "user", "content": content}]
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant."
+        },
+        {
+            "role": "user",
+            "content": "Hi, can you tell me about the weather in New York today?"
+        },
+        {
+            "role": "assistant",
+            "content": "Hello! The weather in New York today is partly cloudy with a high of 72°F and a low of 60°F. There's a 10% chance of rain, so you might want to carry an umbrella just in case."
+        },
+        {
+            "role": "user",
+            "content": "Thanks! What’s the best way to get from Manhattan to Brooklyn?"
+        },
+        {
+            "role": "assistant",
+            "content": "The best way to get from Manhattan to Brooklyn depends on your starting point and destination. Generally, you can use the subway (e.g., A, C, F, or R lines), take a taxi, or even bike across the Brooklyn Bridge if you're up for a scenic ride. Which method would you prefer?"
+        },
+        {
+            "role": "user",
+            "content": "I think I’ll take the subway. Oh, and do you know any good pizza places in Brooklyn?"
+        },
+        {
+            "role": "assistant",
+            "content": "Great choice! The subway is very convenient. For pizza in Brooklyn, you should definitely check out Roberta's in Bushwick, Di Fara Pizza in Midwood, and Grimaldi's under the Brooklyn Bridge. Each has its own unique style and is highly recommended!"
+        },
+        {
+            "role": "user",
+            "content": "Awesome, thanks! By the way, do you like cats or dogs more?"
+        },
+        {
+            "role": "assistant",
+            "content": "As an AI, I don't have personal preferences, but I can appreciate both cats and dogs for their unique qualities. Cats are often independent and can be quite charming, while dogs are known for their loyalty and energy. Do you have a favorite?"
+        },
+        {
+            "role": "user",
+            "content": "I’m more of a dog person. They’re just so lovable and fun to play with. But my roommate loves cats. We always argue about it."
+        },
+        {
+            "role": "assistant",
+            "content": "It sounds like a classic debate! Both pets have their pros and cons, and it's great that you and your roommate can have some fun with it. Maybe you could compromise and adopt a cat and a dog together? Just a thought! 😊"
+        },
+        {
+            "role": "user",
+            "content": "Haha, maybe one day! Speaking of pets, what’s the capital of France?"
+        },
+        {
+            "role": "assistant",
+            "content": "The capital of France is Paris. It's a beautiful city known for its art, culture, and iconic landmarks like the Eiffel Tower and Notre-Dame Cathedral. Is there anything else you'd like to know about Paris or France?"
+        },
+        {
+            "role": "user",
+            "content": "No, that’s all. Thanks for the help! Have a nice day!"
+        },
+        {
+            "role": "assistant",
+            "content": "You're welcome! If you have any more questions, feel free to ask. Have a great day too!"
+        }
+    ]
     memories = await mem.add(messages, metadata, filters)
     logging.info(f"{memories=}")
 
